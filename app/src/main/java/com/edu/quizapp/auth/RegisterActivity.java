@@ -1,4 +1,4 @@
-package com.edu.quizapp.ui.auth;
+package com.edu.quizapp.auth;
 
 import android.app.Activity;
 
