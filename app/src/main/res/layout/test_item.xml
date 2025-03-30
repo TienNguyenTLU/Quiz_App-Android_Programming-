@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="#87CEEB">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/test_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_math" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/test_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên bài kiểm tra: Toán 15p"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/test_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mã bài kiểm tra: ME01"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/test_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lớp: M01"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/test_question_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số câu: 20"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/test_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thời lượng: 15p"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
