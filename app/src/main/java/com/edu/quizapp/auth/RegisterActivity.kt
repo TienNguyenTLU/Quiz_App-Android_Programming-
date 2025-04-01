@@ -2,6 +2,7 @@ package com.edu.quizapp.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -11,6 +12,12 @@ import com.edu.quizapp.R
 import com.edu.quizapp.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.edu.quizapp.data.models.User
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -18,6 +25,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var validator: RegisterValidator
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,16 +122,9 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
-                        user?.sendEmailVerification()
-                            ?.addOnCompleteListener { verificationTask ->
-                                binding.progressBar.visibility = View.GONE
-                                if (verificationTask.isSuccessful) {
-                                    Toast.makeText(this, "Email xác thực đã được gửi.", Toast.LENGTH_SHORT).show()
-                                    verifyEmail()
-                                } else {
-                                    Toast.makeText(this, "Lỗi gửi email xác thực.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
+                        user?.let {
+                            sendEmailVerification(it.uid, fullName, role, email)
+                        }
                     } else {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(this, "Đăng ký thất bại: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -132,38 +133,84 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun verifyEmail() {
-        val user = auth.currentUser
-        user?.reload()?.addOnCompleteListener { reloadTask ->
-            if (reloadTask.isSuccessful) {
-                if (user.isEmailVerified) {
-                    saveUserDataToFirestore(user.uid, binding.etFullName.text.toString().trim(), binding.actvRole.text.toString().trim(), binding.etEmail.text.toString().trim())
+    private fun sendEmailVerification(uid: String, fullName: String, role: String, email: String) {
+        auth.currentUser?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this, "Đăng ký thành công. Vui lòng kiểm tra email để xác thực.", Toast.LENGTH_LONG).show()
+                    saveUserDataToFireStore(uid, fullName, role, email)
+                    checkEmailVerified(uid) // Kiểm tra xác thực email
                 } else {
-                    Toast.makeText(this, "Vui lòng kiểm tra email của bạn để xác thực.", Toast.LENGTH_LONG).show()
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this, "Gửi email xác thực thất bại: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this, "Lỗi kiểm tra xác thực email.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun checkEmailVerified(uid: String) {
+        coroutineScope.launch {
+            try {
+                val user = auth.currentUser
+                user?.reload()?.await()
+                if (user?.isEmailVerified == true) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RegisterActivity, "Email đã được xác thực.", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+                        finish()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RegisterActivity, "Email chưa được xác thực. Vui lòng xác thực email để tiếp tục.", Toast.LENGTH_LONG).show()
+                        binding.progressBar.visibility = View.GONE
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterActivity, "Lỗi kiểm tra xác thực email: ${e.message}", Toast.LENGTH_SHORT).show()
+                    binding.progressBar.visibility = View.GONE
+                }
             }
         }
     }
 
-    private fun saveUserDataToFirestore(uid: String, fullName: String, role: String, email: String) {
-        val user = hashMapOf(
-            "uid" to uid,
-            "name" to fullName,
-            "role" to role,
-            "email" to email
-        )
+    private fun saveUserDataToFireStore(uid: String, fullName: String, role: String, email: String) {
+        binding.progressBar.visibility = View.VISIBLE
+        Log.d("RegisterActivity", "saveUserDataToFirestore: uid=$uid, fullName=$fullName, role=$role, email=$email")
 
+        val user = User(uid, email, role, fullName)
+
+        coroutineScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    saveUserToFireStoreSuspend(uid, user)
+                }
+                withContext(Dispatchers.Main) {
+                    binding.progressBar.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    binding.progressBar.visibility = View.GONE
+                    Log.e("RegisterActivity", "Error saving user data: ${e.message}")
+                    Toast.makeText(this@RegisterActivity, "Lỗi khi lưu dữ liệu người dùng: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private suspend fun saveUserToFireStoreSuspend(uid: String, user: User) = suspendCoroutine<Unit> { continuation ->
         db.collection("users").document(uid)
-            .set(user)
+            .set(user.toMap())
             .addOnSuccessListener {
-                Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                continuation.resume(Unit)
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                continuation.resumeWithException(e)
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineScope.cancel()
     }
 }
