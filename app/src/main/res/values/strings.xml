@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Quiz App</string>
+    <string name="invalid_full_name">Họ và tên không hợp lệ.</string>
+    <string name="invalid_role">Chọn vai trò hợp lệ.</string>
+    <string name="invalid_email">Email không hợp lệ.</string>
+    <string name="invalid_password">Mật khẩu không hợp lệ.</string>
+    <string name="password_mismatch">Mật khẩu không khớp.</string>
+    <string name="registration_failed">Đăng ký thất bại.</string>
+    <string name="verification_email_failed">Gửi email xác thực thất bại.</string>
+    <string name="verification_check_failed">Lỗi kiểm tra xác thực email.</string>
+    <string name="save_user_data_failed">Lỗi khi lưu dữ liệu người dùng.</string>
+    <string name="registration_success">Đăng ký thành công. Vui lòng kiểm tra email để xác thực.</string>
+    <string name="email_verified">Email đã được xác thực.</string>
+    <string name="email_not_verified">Email chưa được xác thực. Vui lòng xác thực email để tiếp tục.</string>
 </resources>

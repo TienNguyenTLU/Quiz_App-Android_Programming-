@@ -6,7 +6,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/white">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/profile_image"
         android:layout_width="40dp"
         android:layout_height="40dp"

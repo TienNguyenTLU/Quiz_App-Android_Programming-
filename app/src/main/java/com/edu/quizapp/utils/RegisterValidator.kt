@@ -1,11 +1,11 @@
-package com.edu.quizapp.auth
+package com.edu.quizapp.utils
 
 import android.util.Patterns
 
 class RegisterValidator {
 
     fun validateFullName(fullName: String): Boolean {
-        return fullName.isNotBlank() && fullName.length >= 2 && fullName.matches("^[a-zA-Z\\s]+$".toRegex())
+        return fullName.isNotBlank() && fullName.length >= 2 && fullName.matches("^[\\p{L}\\s]+$".toRegex())
     }
 
     fun validateRole(role: String): Boolean {
