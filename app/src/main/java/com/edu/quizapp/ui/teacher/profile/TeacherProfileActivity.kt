@@ -1,4 +1,4 @@
-package com.edu.quizapp.ui.student.profile
+package com.edu.quizapp.ui.teacher.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,34 +8,33 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.edu.quizapp.R
 import com.edu.quizapp.auth.LoginActivity
-import com.edu.quizapp.databinding.ActivityStudentProfileBinding
-import com.edu.quizapp.ui.student.dashboard.StudentDashboardActivity
+import com.edu.quizapp.databinding.ActivityTeacherPofileBinding
+import com.edu.quizapp.ui.student.profile.ChangePasswordTeacherActivity
+import com.edu.quizapp.ui.student.profile.LogoutConfirmationTeacherActivity
+import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 
-class StudentProfileActivity : AppCompatActivity() {
+class TeacherProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityStudentProfileBinding
-    private lateinit var viewModel: StudentProfileViewModel
+    private lateinit var binding: ActivityTeacherPofileBinding
+    private lateinit var viewModel: TeacherProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStudentProfileBinding.inflate(layoutInflater)
+        binding = ActivityTeacherPofileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[StudentProfileViewModel::class.java]
+        viewModel = ViewModelProvider(this)[TeacherProfileViewModel::class.java]
 
         setupObservers()
         setupListeners()
-        loadStudentData()
-
-        // Hiển thị Fragment mặc định (nếu bạn muốn hiển thị một Fragment cho thông tin hồ sơ)
-        // showProfileInfo() // Nếu bạn có một fragment thông tin hồ sơ riêng
+        loadTeacherData()
     }
 
-    private fun loadStudentData() {
+    private fun loadTeacherData() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid != null) {
-            viewModel.loadStudentData(uid)
+            viewModel.loadTeacherData()
         } else {
             Toast.makeText(this, "Không thể lấy thông tin người dùng.", Toast.LENGTH_SHORT).show()
             finish()
@@ -43,13 +42,20 @@ class StudentProfileActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.studentData.observe(this) { student ->
-            if (student != null) {
-                binding.profileName.text = student.name
-                binding.profileEmail.text = student.email
-                loadProfileImage(student.profileImageUrl)
+        viewModel.user.observe(this) { user ->
+            if (user != null) {
+                binding.profileName.text = user.name
+                binding.profileEmail.text = user.email
             } else {
-                Toast.makeText(this, "Không thể tải thông tin hồ sơ.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.teacherData.observe(this) { teacher ->
+            if (teacher != null) {
+                loadProfileImage(teacher.profileImageUrl)
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin giáo viên.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -89,7 +95,7 @@ class StudentProfileActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, StudentDashboardActivity::class.java))
+                    startActivity(Intent(this, TeacherDashboardActivity::class.java))
                     finish()
                     true
                 }
@@ -107,21 +113,17 @@ class StudentProfileActivity : AppCompatActivity() {
     }
 
     private fun showEditProfileFragment() {
-        val intent = Intent(this, EditProfileStudentActivity::class.java)
+        val intent = Intent(this, EditProfileTeacherActivity::class.java)
         startActivity(intent)
     }
 
     private fun showChangePasswordFragment() {
-        val intent = Intent(this, ChangePasswordStudentActivity::class.java)
+        val intent = Intent(this,ChangePasswordTeacherActivity::class.java)
         startActivity(intent)
     }
 
     private fun showLogoutFragment() {
-        val intent = Intent(this, LogoutConfirmationStudentActivity::class.java)
+        val intent = Intent(this, LogoutConfirmationTeacherActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun showProfileInfo() {
-        // Hiển thị thông tin hồ sơ (nếu bạn muốn hiển thị một Fragment cho thông tin hồ sơ)
     }
 }

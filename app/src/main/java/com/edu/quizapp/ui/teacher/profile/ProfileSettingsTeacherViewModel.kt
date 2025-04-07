@@ -1,57 +1,56 @@
-package com.edu.quizapp.ui.student.profile
+package com.edu.quizapp.ui.teacher.profile
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.edu.quizapp.data.models.Student
+import com.edu.quizapp.data.models.Teacher
 import com.edu.quizapp.data.models.User
-import com.edu.quizapp.data.repository.StudentRepository
+import com.edu.quizapp.data.repository.TeacherRepository
 import com.edu.quizapp.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-class ProfileSettingsViewModel : ViewModel() {
+class ProfileSettingsTeacherViewModel : ViewModel() {
 
-    private val studentRepository = StudentRepository()
-    private val _studentData = MutableLiveData<Student?>()
-    val studentData: LiveData<Student?> = _studentData
+    private val teacherRepository = TeacherRepository()
+    private val _teacherData = MutableLiveData<Teacher?>()
+    val teacherData: LiveData<Teacher?> = _teacherData
 
     private val userRepository = UserRepository()
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
 
     init {
-        loadStudentData()
+        loadTeacherData()
         loadUserData()
     }
 
-    private fun loadStudentData() {
+    fun loadTeacherData() {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid != null) {
-                _studentData.value = studentRepository.getStudentById(uid)
+                _teacherData.value = teacherRepository.getTeacherById(uid)
             }
         }
     }
 
-    private fun loadUserData() {
+    fun loadUserData() {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid != null) {
-                _user.value = userRepository.getUserByUid(uid) // Thay đổi ở đây
+                _user.value = userRepository.getUserByUid(uid)
             }
         }
     }
 
-    fun updateStudent(student: Student, imageUri: Uri?): LiveData<Boolean> {
+    fun updateTeacher(teacher: Teacher, imageUri: Uri?): LiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid != null) {
-                // Cập nhật student và ảnh
-                result.value = studentRepository.updateStudent(uid, student, imageUri)
+                result.value = teacherRepository.updateTeacher(uid, teacher, imageUri)
             } else {
                 result.value = false
             }

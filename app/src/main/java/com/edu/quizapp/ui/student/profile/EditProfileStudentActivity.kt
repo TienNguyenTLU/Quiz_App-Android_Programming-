@@ -10,28 +10,28 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.edu.quizapp.R
 import com.edu.quizapp.data.models.Student
-import com.edu.quizapp.databinding.ActivityEditProfileBinding
+import com.edu.quizapp.databinding.ActivityEditProfileStudentBinding
 import kotlinx.coroutines.launch
 
-class EditProfileActivity : AppCompatActivity() {
+class EditProfileStudentActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditProfileBinding
-    private lateinit var viewModel: ProfileSettingsViewModel
+    private lateinit var binding: ActivityEditProfileStudentBinding
+    private lateinit var viewModel: ProfileSettingsStudentViewModel
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditProfileBinding.inflate(layoutInflater)
+        binding = ActivityEditProfileStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[ProfileSettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ProfileSettingsStudentViewModel::class.java]
 
         lifecycleScope.launch {
-            viewModel.studentData.observe(this@EditProfileActivity) { student ->
+            viewModel.studentData.observe(this@EditProfileStudentActivity) { student ->
                 if (student != null) {
                     if (student.profileImageUrl.isNotEmpty()) {
-                        Glide.with(this@EditProfileActivity)
+                        Glide.with(this@EditProfileStudentActivity)
                             .load(student.profileImageUrl)
                             .placeholder(R.drawable.ic_profile_placeholder)
                             .into(binding.profileImage)
@@ -47,7 +47,7 @@ class EditProfileActivity : AppCompatActivity() {
                 }
             }
 
-            viewModel.user.observe(this@EditProfileActivity){user ->
+            viewModel.user.observe(this@EditProfileStudentActivity){ user ->
                 if(user != null){
                     binding.editName.setText(user.name)
                     binding.editEmail.setText(user.email)
@@ -73,16 +73,16 @@ class EditProfileActivity : AppCompatActivity() {
                     )
 
                     viewModel.updateStudent(updatedStudent, selectedImageUri)
-                        .observe(this@EditProfileActivity) { isSuccess ->
+                        .observe(this@EditProfileStudentActivity) { isSuccess ->
                             if (isSuccess) {
-                                Toast.makeText(this@EditProfileActivity, "Cập nhật thành công", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@EditProfileStudentActivity, "Cập nhật thành công", Toast.LENGTH_SHORT).show()
                                 finish()
                             } else {
-                                Toast.makeText(this@EditProfileActivity, "Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@EditProfileStudentActivity, "Cập nhật thất bại", Toast.LENGTH_SHORT).show()
                             }
                         }
                 } else {
-                    Toast.makeText(this@EditProfileActivity, "Không thể lấy thông tin người dùng", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileStudentActivity, "Không thể lấy thông tin người dùng", Toast.LENGTH_SHORT).show()
                 }
             }
         }

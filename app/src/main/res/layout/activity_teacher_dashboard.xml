@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.dashboard.StudentDashboardActivity">
+    tools:context=".ui.teacher.dashboard.TeacherDashboardActivity">
 
     <include
         android:id="@+id/top_bar_include"
@@ -20,47 +20,16 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/search_bar_background"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="8dp"
-        android:hint="Nhập mã lớp"
+        android:hint="Tìm kiếm"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layout_constraintTop_toBottomOf="@id/top_bar_include"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search_button"/>
-
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Tìm kiếm"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toTopOf="@id/search_bar"
-        app:layout_constraintBottom_toBottomOf="@id/search_bar"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/class_info_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
-
-    <Button
-        android:id="@+id/join_class_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gia nhập lớp học"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/class_info_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
         android:id="@+id/feature_layout"
@@ -69,7 +38,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/join_class_button">
+        app:layout_constraintTop_toBottomOf="@id/search_bar">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -107,7 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bài kiểm tra"
+                android:text="Quản lý bài kiểm tra"
                 android:textSize="14sp"
                 android:layout_marginTop="8dp" />
 
@@ -128,7 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lớp học"
+                android:text="Quản lý lớp học"
                 android:textSize="14sp"
                 android:layout_marginTop="8dp" />
 
@@ -140,7 +109,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_navigation_menu"
+        app:menu="@menu/bottom_navigation_menu_teacher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

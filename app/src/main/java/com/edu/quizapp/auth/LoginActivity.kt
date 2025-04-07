@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.edu.quizapp.MainActivity
 import com.edu.quizapp.ui.student.dashboard.StudentDashboardActivity
 import com.edu.quizapp.databinding.ActivityLoginBinding
+import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -50,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
                 is LoginResult.Success -> {
                     val intent = when (result.role) {
                         "Student" -> Intent(this, StudentDashboardActivity::class.java)
-                        "Teacher" -> Intent(this, MainActivity::class.java)
+                        "Teacher" -> Intent(this, TeacherDashboardActivity::class.java)
                         else -> Intent(this, MainActivity::class.java)
                     }
                     startActivity(intent)

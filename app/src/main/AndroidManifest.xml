@@ -45,16 +45,39 @@
             android:exported="false"/>
 
         <activity
-            android:name=".ui.student.profile.EditProfileActivity"
+            android:name=".ui.student.profile.EditProfileStudentActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.student.profile.ChangePasswordActivity"
+            android:name=".ui.student.profile.ChangePasswordStudentActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.student.profile.LogoutConfirmationActivity"
+            android:name=".ui.student.profile.LogoutConfirmationStudentActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.TeacherDashboardActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.profile.TeacherProfileActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.profile.EditProfileTeacherActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.student.profile.ChangePasswordTeacherActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.student.profile.LogoutConfirmationTeacherActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.ClassManagementActivity"
             android:exported="false"/>
     </application>
-
 </manifest>

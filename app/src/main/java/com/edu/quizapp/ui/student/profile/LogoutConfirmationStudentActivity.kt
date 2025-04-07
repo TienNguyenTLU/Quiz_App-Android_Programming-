@@ -5,19 +5,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.edu.quizapp.auth.LoginActivity
-import com.edu.quizapp.databinding.ActivityLogoutConfirmationBinding
+import com.edu.quizapp.databinding.ActivityLogoutConfirmationStudentBinding
 
-class LogoutConfirmationActivity : AppCompatActivity() {
+class LogoutConfirmationStudentActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLogoutConfirmationBinding
-    private lateinit var viewModel: ProfileSettingsViewModel
+    private lateinit var binding: ActivityLogoutConfirmationStudentBinding
+    private lateinit var viewModel: ProfileSettingsStudentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLogoutConfirmationBinding.inflate(layoutInflater)
+        binding = ActivityLogoutConfirmationStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[ProfileSettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ProfileSettingsStudentViewModel::class.java]
 
         binding.confirmButton.setOnClickListener {
             viewModel.logout()
