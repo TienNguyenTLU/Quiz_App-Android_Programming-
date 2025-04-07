@@ -4,5 +4,7 @@ data class Teacher(
     val uid: String = "",
     val name: String = "",
     val phone: String = "",
-    val address: String = ""
+    val address: String = "",
+    val profileImageUrl: String = "",
+    val email: String = ""
 )
