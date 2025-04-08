@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -78,6 +79,58 @@
 
         <activity
             android:name=".ui.teacher.dashboard.classroom.ClassManagementActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.AddClassActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.AddClassSuccessActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.ClassDetailsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.EditClassActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.classroom.EditClassSuccessActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.test.TestManagementActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.test.AddTestActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.test.CreateQuestionsFromFileActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.test.TestDetailActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.test.AddTestSuccessActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.category.CategoryManagementActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.category.ClassesByCategoryActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.category.TestsByCategoryActivity"
             android:exported="false"/>
     </application>
 </manifest>

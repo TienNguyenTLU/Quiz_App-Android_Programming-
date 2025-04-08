@@ -1,5 +1,7 @@
 package com.edu.quizapp.data.models
 
+import android.util.Log
+
 data class Student(
     val uid: String = "",
     val studentsId: String = "",
@@ -11,6 +13,7 @@ data class Student(
 ) {
     companion object {
         fun fromMap(map: Map<String, Any>): Student {
+            Log.d("Student", "Mapping from map: $map")
             return Student(
                 uid = map["uid"] as? String ?: "",
                 studentsId = map["studentsId"] as? String ?: "",

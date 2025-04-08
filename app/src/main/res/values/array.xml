@@ -4,4 +4,15 @@
         <item>Giáo viên</item>
         <item>Học sinh</item>
     </string-array>
+
+    <string-array name="subjects">
+        <item>Toán học</item>
+        <item>Vật lý</item>
+        <item>Hóa học</item>
+        <item>Sinh học</item>
+        <item>Lịch sử</item>
+        <item>Địa lý</item>
+        <item>Ngữ văn</item>
+        <item>Tiếng Anh</item>
+    </string-array>
 </resources>

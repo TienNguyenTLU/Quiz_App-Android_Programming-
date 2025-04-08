@@ -95,4 +95,34 @@ class UserRepository {
     suspend fun getCurrentUserUid(): String? {
         return auth.currentUser?.uid
     }
+
+    suspend fun getUserById(userId: String): User? {
+        return try {
+            val snapshot = userCollection.document(userId).get().await()
+            if (snapshot.exists()) {
+                User.fromMap(snapshot.data!!)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error getting user by ID: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun getUsersByIds(userIds: List<String>): List<User> {
+        return try {
+            val snapshots = userCollection.whereIn("uid", userIds).get().await()
+            snapshots.documents.mapNotNull {
+                if (it.exists()) {
+                    User.fromMap(it.data!!)
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error getting users by IDs: ${e.message}")
+            emptyList()
+        }
+    }
 }

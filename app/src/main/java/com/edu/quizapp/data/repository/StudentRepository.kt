@@ -15,30 +15,35 @@ class StudentRepository {
     private val storageRef = storage.reference
 
     suspend fun getStudentById(uid: String): Student? {
+        Log.d("StudentRepository", "Fetching student with uid: $uid")
         return try {
-            val snapshot = studentsCollection.document(uid).get().await()
-            if (snapshot.exists()) {
-                Student.fromMap(snapshot.data!!)
+            val snapshot = studentsCollection.whereEqualTo("uid", uid).get().await()
+            Log.d("StudentRepository", "Firestore snapshot: $snapshot")
+            if (!snapshot.isEmpty) {
+                val student = Student.fromMap(snapshot.documents[0].data!!)
+                Log.d("StudentRepository", "Student found: $student")
+                return student
             } else {
-                null
+                Log.d("StudentRepository", "Student not found with uid: $uid")
+                return null
             }
         } catch (e: Exception) {
-            Log.e("StudentRepository", "Error getting student by ID: ${e.message}")
-            null
+            Log.e("StudentRepository", "Error getting student by uid: ${e.message}")
+            return null
         }
     }
 
-    suspend fun updateStudent(uid: String, student: Student, imageUri: Uri? = null): Boolean {
+    suspend fun updateStudent(studentsId: String, student: Student, imageUri: Uri? = null): Boolean {
         return try {
             val imageUrl = if (imageUri != null) {
-                uploadImage(uid, imageUri)
+                uploadImage(studentsId, imageUri)
             } else {
                 student.profileImageUrl
             }
 
             val updatedStudent = student.copy(profileImageUrl = imageUrl ?: "")
-            studentsCollection.document(uid).update(updatedStudent.toMap()).await()
-            Log.d("StudentRepository", "Student updated successfully: $uid")
+            studentsCollection.document(studentsId).update(updatedStudent.toMap()).await()
+            Log.d("StudentRepository", "Student updated successfully: $studentsId")
             true
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error updating student: ${e.message}")
@@ -49,14 +54,14 @@ class StudentRepository {
     suspend fun createStudent(student: Student, imageUri: Uri? = null): Boolean {
         return try {
             val imageUrl = if (imageUri != null) {
-                uploadImage(student.uid, imageUri)
+                uploadImage(student.studentsId, imageUri)
             } else {
                 student.profileImageUrl
             }
 
             val newStudent = student.copy(profileImageUrl = imageUrl ?: "")
-            studentsCollection.document(student.uid).set(newStudent.toMap()).await()
-            Log.d("StudentRepository", "Student created successfully: ${student.uid}")
+            studentsCollection.document(student.studentsId).set(newStudent.toMap()).await()
+            Log.d("StudentRepository", "Student created successfully: ${student.studentsId}")
             true
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error creating student: ${e.message}")
@@ -64,14 +69,33 @@ class StudentRepository {
         }
     }
 
-    private suspend fun uploadImage(uid: String, imageUri: Uri): String? {
+    private suspend fun uploadImage(studentsId: String, imageUri: Uri): String? {
         return try {
-            val imageRef = storageRef.child("images/$uid/${imageUri.lastPathSegment}")
+            val imageRef = storageRef.child("images/$studentsId/${imageUri.lastPathSegment}")
             val uploadTask = imageRef.putFile(imageUri).await()
             uploadTask.metadata?.reference?.downloadUrl?.await().toString()
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error uploading image: ${e.message}")
             null
+        }
+    }
+
+    suspend fun getStudentByStudentsId(studentsId: String): Student? {
+        Log.d("StudentRepository", "Fetching student with studentsId: $studentsId")
+        return try {
+            val snapshot = studentsCollection.whereEqualTo("studentsId", studentsId).get().await() // Sửa lại dòng này
+            Log.d("StudentRepository", "Firestore snapshot: $snapshot")
+            if (!snapshot.isEmpty) {
+                val student = Student.fromMap(snapshot.documents[0].data!!)
+                Log.d("StudentRepository", "Student found: $student")
+                return student
+            } else {
+                Log.d("StudentRepository", "Student not found with studentsId: $studentsId")
+                return null
+            }
+        } catch (e: Exception) {
+            Log.e("StudentRepository", "Error getting student by studentsId: ${e.message}")
+            return null
         }
     }
 }

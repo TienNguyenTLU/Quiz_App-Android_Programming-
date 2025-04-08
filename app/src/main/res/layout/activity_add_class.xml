@@ -148,28 +148,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Ảnh lớp"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/class_image_view"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="8dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_class_image_placeholder" />
-
-            <Button
-                android:id="@+id/select_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Chọn ảnh" />
-
             <Button
                 android:id="@+id/save_class_button"
                 android:layout_width="match_parent"

@@ -1,12 +1,17 @@
 package com.edu.quizapp.ui.teacher.dashboard.classroom
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.edu.quizapp.data.models.Classes
 import com.edu.quizapp.data.repository.ClassRepository
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class ClassManagementViewModel : ViewModel() {
 
@@ -17,14 +22,24 @@ class ClassManagementViewModel : ViewModel() {
     private val _navigateToClassDetails = MutableLiveData<Classes?>()
     val navigateToClassDetails: LiveData<Classes?> = _navigateToClassDetails
 
+    private val _addClassResult = MutableLiveData<Boolean>()
+    val addClassResult: LiveData<Boolean> = _addClassResult
+
     init {
         loadClasses()
     }
 
-    private fun loadClasses() {
-        viewModelScope.launch {
-            val classes = classRepository.getAllClasses()
-            _classList.value = classes
+    fun loadClasses() {
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                val classes = withContext(Dispatchers.IO) {
+                    classRepository.getAllClasses()
+                }
+                _classList.value = classes
+                Log.d("ClassManagementViewModel", "Loaded classes successfully")
+            } catch (e: Exception) {
+                Log.e("ClassManagementViewModel", "Error loading classes: ${e.message}")
+            }
         }
     }
 
@@ -36,5 +51,30 @@ class ClassManagementViewModel : ViewModel() {
         _navigateToClassDetails.value = null
     }
 
-    // ... các hàm khác để thêm, sửa, xóa lớp học
+    fun addClass(className: String, classCode: String, studentCount: Int, subject: String, classImageUrl: String?) {
+        viewModelScope.launch {
+            try {
+                val teacherId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                val classId = UUID.randomUUID().toString()
+                val newClass = Classes(
+                    classId = classId,
+                    className = className,
+                    teacherId = teacherId,
+                    classImageUrl = classImageUrl ?: "",
+                    classCode = classCode
+                )
+                val success = withContext(Dispatchers.IO) {
+                    classRepository.createClass(newClass)
+                }
+                _addClassResult.value = success
+                if (success) {
+                    loadClasses()
+                    Log.d("ClassManagementViewModel", "Class added successfully")
+                }
+            } catch (e: Exception) {
+                _addClassResult.value = false
+                Log.e("ClassManagementViewModel", "Error adding class: ${e.message}")
+            }
+        }
+    }
 }

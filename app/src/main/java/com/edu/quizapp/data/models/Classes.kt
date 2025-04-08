@@ -4,9 +4,10 @@ data class Classes(
     val classId: String = "",
     val className: String = "",
     val teacherId: String = "",
-    val students: List<String> = emptyList(),
+    val students: List<String> = emptyList(), // Danh sách studentsId
     val requests: List<String> = emptyList(),
-    val classImageUrl: String = "" // Thêm classImageUrl
+    val classImageUrl: String = "",
+    val classCode: String = ""
 ) {
     companion object {
         fun fromMap(map: Map<String, Any>): Classes {
@@ -16,7 +17,8 @@ data class Classes(
                 teacherId = map["teacherId"] as? String ?: "",
                 students = map["students"] as? List<String> ?: emptyList(),
                 requests = map["requests"] as? List<String> ?: emptyList(),
-                classImageUrl = map["classImageUrl"] as? String ?: "" // Thêm classImageUrl
+                classImageUrl = map["classImageUrl"] as? String ?: "",
+                classCode = map["classCode"] as? String ?: ""
             )
         }
     }
@@ -28,7 +30,8 @@ data class Classes(
             "teacherId" to teacherId,
             "students" to students,
             "requests" to requests,
-            "classImageUrl" to classImageUrl // Thêm classImageUrl
+            "classImageUrl" to classImageUrl,
+            "classCode" to classCode
         )
     }
 }

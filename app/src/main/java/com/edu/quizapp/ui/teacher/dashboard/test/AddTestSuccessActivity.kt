@@ -1,25 +1,41 @@
-package com.edu.quizapp.ui.teacher.dashboard.classroom
+package com.edu.quizapp.ui.teacher.dashboard.test
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.edu.quizapp.R
-import com.edu.quizapp.databinding.ActivityAddClassSuccessBinding
+import com.edu.quizapp.databinding.ActivityAddTestSuccessBinding
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 
-class AddClassSuccessActivity : AppCompatActivity() {
+class AddTestSuccessActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAddClassSuccessBinding
+    private lateinit var binding: ActivityAddTestSuccessBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddClassSuccessBinding.inflate(layoutInflater)
+        binding = ActivityAddTestSuccessBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupListeners()
         setupBottomNavigationTeacher()
+    }
+
+    private fun setupListeners() {
         binding.backButton.setOnClickListener {
-            finish() // Quay lại ClassManagementActivity
+            // Quay lại TestManagementActivity
+            val intent = Intent(this, TestManagementActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        binding.backButtonHeader.setOnClickListener {
+            // Quay lại TestManagementActivity
+            val intent = Intent(this, TestManagementActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -27,17 +43,14 @@ class AddClassSuccessActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_notifications -> {
-                    // Xử lý sự kiện cho navigation_notifications
                     true
                 }
                 R.id.navigation_home -> {
-                    // Xử lý sự kiện cho navigation_home
                     val intent = Intent(this, TeacherDashboardActivity::class.java)
                     startActivity(intent)
                     true
                 }
                 R.id.navigation_profile -> {
-                    // Xử lý sự kiện cho navigation_profile
                     val intent = Intent(this, TeacherProfileActivity::class.java)
                     startActivity(intent)
                     true

@@ -1,5 +1,6 @@
 package com.edu.quizapp.data.repository
 
+import android.util.Log
 import com.edu.quizapp.data.models.Classes
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,5 +26,37 @@ class ClassRepository {
 
     suspend fun getAllClasses(): List<Classes> {
         return classCollection.get().await().toObjects(Classes::class.java)
+    }
+
+    suspend fun createClass(classes: Classes): Boolean {
+        return try {
+            classCollection.document(classes.classId).set(classes).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun addStudentToClass(classId: String, studentId: String): Boolean {
+        Log.d("ClassRepository", "Adding studentId: $studentId to classId: $classId")
+        return try {
+            classCollection.document(classId).update("students", FieldValue.arrayUnion(studentId)).await()
+            Log.d("ClassRepository", "addStudentToClass Success")
+            true
+        } catch (e: Exception) {
+            Log.e("ClassRepository", "Error adding student to class: ${e.message}")
+            false
+        }
+    }
+
+    suspend fun deleteClass(classId: String): Boolean {
+        return try {
+            classCollection.document(classId).delete().await()
+            Log.d("ClassRepository", "Class deleted successfully: $classId")
+            true
+        } catch (e: Exception) {
+            Log.e("ClassRepository", "Error deleting class: ${e.message}")
+            false
+        }
     }
 }

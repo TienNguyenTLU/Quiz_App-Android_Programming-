@@ -4,11 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.edu.quizapp.R
 import com.edu.quizapp.databinding.ActivityTeacherDashboardBinding
+import com.edu.quizapp.ui.teacher.dashboard.category.CategoryManagementActivity
 import com.edu.quizapp.ui.teacher.dashboard.classroom.ClassManagementActivity
+import com.edu.quizapp.ui.teacher.dashboard.test.TestManagementActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 
 class TeacherDashboardActivity : AppCompatActivity() {
@@ -85,6 +88,14 @@ class TeacherDashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureLayoutClickListeners() {
+        binding.featureLayout.getChildAt(0).setOnClickListener{
+            val intent = Intent(this, CategoryManagementActivity::class.java)
+            startActivity(intent)
+        }
+        binding.featureLayout.getChildAt(1).setOnClickListener{
+            val intent = Intent(this, TestManagementActivity::class.java)
+            startActivity(intent)
+        }
         binding.featureLayout.getChildAt(2).setOnClickListener {
             val intent = Intent(this, ClassManagementActivity::class.java)
             startActivity(intent)
