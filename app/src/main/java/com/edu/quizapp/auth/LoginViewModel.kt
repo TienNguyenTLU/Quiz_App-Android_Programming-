@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.edu.quizapp.utils.LoginValidator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -16,57 +15,49 @@ class LoginViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val validator = LoginValidator()
-
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
     fun loginUser(email: String, password: String) {
+        if (email.isEmpty() || password.isEmpty()) {
+            _loginResult.value = LoginResult.Error("Vui lòng nhập email và mật khẩu")
+            return
+        }
+
+        _loginResult.value = LoginResult.Loading
+
         viewModelScope.launch {
-            if (!validator.validateEmail(email)) {
-                _loginResult.value = LoginResult.Error("Email không hợp lệ.")
-                return@launch
-            }
-
-            if (!validator.validatePassword(password)) {
-                _loginResult.value = LoginResult.Error("Mật khẩu phải có ít nhất 6 ký tự.")
-                return@launch
-            }
-
-            _loginResult.value = LoginResult.Loading
             try {
-                auth.signInWithEmailAndPassword(email, password).await()
-                val user = auth.currentUser
-                user?.let {
-                    redirectToMainScreen(it.uid)
-                } ?: run {
-                    _loginResult.value = LoginResult.Error("Người dùng không tồn tại.")
+                val result = withContext(Dispatchers.IO) {
+                    auth.signInWithEmailAndPassword(email, password).await()
+                }
+                
+                val user = result.user
+                if (user != null) {
+                    // Check if email is verified
+                    if (!user.isEmailVerified) {
+                        _loginResult.value = LoginResult.Error("Vui lòng xác thực email trước khi đăng nhập")
+                        return@launch
+                    }
+                    
+                    // Get user role from Firestore
+                    val document = db.collection("users").document(user.uid).get().await()
+                    if (document.exists()) {
+                        val role = document.getString("role")
+                        if (role != null) {
+                            _loginResult.value = LoginResult.Success(role)
+                        } else {
+                            _loginResult.value = LoginResult.Error("Không tìm thấy vai trò người dùng")
+                        }
+                    } else {
+                        _loginResult.value = LoginResult.Error("Không tìm thấy thông tin người dùng")
+                    }
+                } else {
+                    _loginResult.value = LoginResult.Error("Đăng nhập thất bại")
                 }
             } catch (e: Exception) {
-                _loginResult.value = LoginResult.Error(e.localizedMessage ?: "Đăng nhập thất bại.")
+                _loginResult.value = LoginResult.Error(e.localizedMessage ?: "Lỗi đăng nhập không xác định")
             }
-        }
-    }
-
-    private suspend fun redirectToMainScreen(uid: String) {
-        try {
-            val document = db.collection("users").document(uid).get().await()
-            if (document.exists()) {
-                val role = document.getString("role")
-                withContext(Dispatchers.Main) {
-                    if (role == "Học sinh") {
-                        _loginResult.value = LoginResult.Success("Student")
-                    } else if (role == "Giáo viên") {
-                        _loginResult.value = LoginResult.Success("Teacher")
-                    } else {
-                        _loginResult.value = LoginResult.Success("Other")
-                    }
-                }
-            } else {
-                _loginResult.value = LoginResult.Error("Email hoặc mật khẩu không hợp lệ.")
-            }
-        } catch (e: Exception) {
-            _loginResult.value = LoginResult.Error(e.localizedMessage ?: "Lỗi truy vấn Firestore.")
         }
     }
 }

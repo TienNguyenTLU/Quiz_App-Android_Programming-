@@ -29,9 +29,8 @@ class QuizResultViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val results = resultRepository.getResultsByStudentId("") // Chỉ để lấy danh sách kết quả
-                val foundResult = results.find { it.resultId == resultId }
-                foundResult?.let {
+                val result = resultRepository.getResultById(resultId)
+                result?.let {
                     _result.value = it
                 }
             } catch (e: Exception) {

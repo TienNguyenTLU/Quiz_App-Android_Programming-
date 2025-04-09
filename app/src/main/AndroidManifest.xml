@@ -69,12 +69,12 @@
             android:name=".ui.teacher.profile.EditProfileTeacherActivity"
             android:exported="false"/>
 
-        <activity
-            android:name=".ui.student.profile.ChangePasswordTeacherActivity"
-            android:exported="false"/>
+<!--        <activity-->
+<!--            android:name=".ui.teacher.profile.ChangePasswordTeacherActivity"-->
+<!--            android:exported="false"/>-->
 
         <activity
-            android:name=".ui.student.profile.LogoutConfirmationTeacherActivity"
+            android:name=".ui.teacher.profile.LogoutConfirmationTeacherActivity"
             android:exported="false"/>
 
         <activity
@@ -131,6 +131,14 @@
 
         <activity
             android:name=".ui.student.dashboard.test.StudentTestActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.student.quiz.QuizActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.student.result.QuizResultActivity"
             android:exported="false"/>
     </application>
 </manifest>

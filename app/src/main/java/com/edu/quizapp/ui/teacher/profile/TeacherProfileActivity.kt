@@ -10,7 +10,6 @@ import com.edu.quizapp.R
 import com.edu.quizapp.auth.LoginActivity
 import com.edu.quizapp.databinding.ActivityTeacherPofileBinding
 import com.edu.quizapp.ui.student.profile.ChangePasswordTeacherActivity
-import com.edu.quizapp.ui.student.profile.LogoutConfirmationTeacherActivity
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -42,17 +41,10 @@ class TeacherProfileActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.user.observe(this) { user ->
-            if (user != null) {
-                binding.profileName.text = user.name
-                binding.profileEmail.text = user.email
-            } else {
-                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         viewModel.teacherData.observe(this) { teacher ->
             if (teacher != null) {
+                binding.profileName.text = teacher.name
+                binding.profileEmail.text = teacher.email
                 loadProfileImage(teacher.profileImageUrl)
             } else {
                 Toast.makeText(this, "Không thể tải thông tin giáo viên.", Toast.LENGTH_SHORT).show()
@@ -99,10 +91,7 @@ class TeacherProfileActivity : AppCompatActivity() {
                     finish()
                     true
                 }
-                R.id.navigation_notifications -> {
-                    // Xử lý sự kiện notifications (nếu cần)
-                    true
-                }
+
                 R.id.navigation_profile -> {
                     // Xử lý sự kiện profile (nếu cần)
                     true

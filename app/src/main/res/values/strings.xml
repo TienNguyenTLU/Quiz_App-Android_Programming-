@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Quiz App</string>
     <string name="invalid_full_name">Họ và tên không hợp lệ.</string>
@@ -12,4 +13,19 @@
     <string name="registration_success">Đăng ký thành công. Vui lòng kiểm tra email để xác thực.</string>
     <string name="email_verified">Email đã được xác thực.</string>
     <string name="email_not_verified">Email chưa được xác thực. Vui lòng xác thực email để tiếp tục.</string>
+    
+    <!-- Quiz Result Screen -->
+    <string name="quiz_result">Kết quả bài kiểm tra</string>
+    <string name="back">Quay lại</string>
+    <string name="correct">Đúng</string>
+    <string name="incorrect">Sai</string>
+    <string name="skipped">Bỏ qua</string>
+
+    <!-- Bottom Navigation -->
+    <string name="home">Trang chủ</string>
+    <string name="profile">Hồ sơ</string>
+    
+    <!-- Student Result List -->
+    <string name="quiz_results">Kết quả bài kiểm tra</string>
+    <string name="no_results_found">Không tìm thấy kết quả nào</string>
 </resources>

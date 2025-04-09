@@ -17,10 +17,10 @@ class StudentRepository {
     suspend fun getStudentById(uid: String): Student? {
         Log.d("StudentRepository", "Fetching student with uid: $uid")
         return try {
-            val snapshot = studentsCollection.whereEqualTo("uid", uid).get().await() // Sửa dòng này
+            val snapshot = studentsCollection.document(uid).get().await()
             Log.d("StudentRepository", "Firestore snapshot: $snapshot")
-            if (!snapshot.isEmpty) {
-                val student = Student.fromMap(snapshot.documents[0].data!!)
+            if (snapshot.exists()) {
+                val student = Student.fromMap(snapshot.data!!)
                 Log.d("StudentRepository", "Student found: $student")
                 return student
             } else {
@@ -33,17 +33,17 @@ class StudentRepository {
         }
     }
 
-    suspend fun updateStudent(studentsId: String, student: Student, imageUri: Uri? = null): Boolean {
+    suspend fun updateStudent(uid: String, student: Student, imageUri: Uri? = null): Boolean {
         return try {
             val imageUrl = if (imageUri != null) {
-                uploadImage(studentsId, imageUri)
+                uploadImage(uid, imageUri)
             } else {
                 student.profileImageUrl
             }
 
             val updatedStudent = student.copy(profileImageUrl = imageUrl ?: "")
-            studentsCollection.document(studentsId).update(updatedStudent.toMap()).await()
-            Log.d("StudentRepository", "Student updated successfully: $studentsId")
+            studentsCollection.document(uid).set(updatedStudent.toMap()).await()
+            Log.d("StudentRepository", "Student updated successfully: $uid")
             true
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error updating student: ${e.message}")
@@ -54,14 +54,14 @@ class StudentRepository {
     suspend fun createStudent(student: Student, imageUri: Uri? = null): Boolean {
         return try {
             val imageUrl = if (imageUri != null) {
-                uploadImage(student.studentsId, imageUri)
+                uploadImage(student.uid, imageUri)
             } else {
                 student.profileImageUrl
             }
 
             val newStudent = student.copy(profileImageUrl = imageUrl ?: "")
-            studentsCollection.document(student.uid).set(newStudent.toMap()).await() // Sửa dòng này
-            Log.d("StudentRepository", "Student created successfully: ${student.uid}") // Sửa log
+            studentsCollection.document(student.uid).set(newStudent.toMap()).await()
+            Log.d("StudentRepository", "Student created successfully: ${student.uid}")
             true
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error creating student: ${e.message}")
@@ -69,9 +69,9 @@ class StudentRepository {
         }
     }
 
-    private suspend fun uploadImage(studentsId: String, imageUri: Uri): String? {
+    private suspend fun uploadImage(uid: String, imageUri: Uri): String? {
         return try {
-            val imageRef = storageRef.child("images/$studentsId/${imageUri.lastPathSegment}")
+            val imageRef = storageRef.child("images/$uid/${imageUri.lastPathSegment}")
             val uploadTask = imageRef.putFile(imageUri).await()
             uploadTask.metadata?.reference?.downloadUrl?.await().toString()
         } catch (e: Exception) {
@@ -83,7 +83,7 @@ class StudentRepository {
     suspend fun getStudentByStudentsId(studentsId: String): Student? {
         Log.d("StudentRepository", "Fetching student with studentsId: $studentsId")
         return try {
-            val snapshot = studentsCollection.whereEqualTo("studentsId", studentsId).get().await() // Sửa lại dòng này
+            val snapshot = studentsCollection.whereEqualTo("studentsId", studentsId).get().await()
             Log.d("StudentRepository", "Firestore snapshot: $snapshot")
             if (!snapshot.isEmpty) {
                 val student = Student.fromMap(snapshot.documents[0].data!!)

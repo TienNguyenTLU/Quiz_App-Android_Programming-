@@ -27,9 +27,7 @@ class EditClassSuccessActivity : AppCompatActivity() {
     private fun setupBottomNavigationTeacher() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
+
                 R.id.navigation_home -> {
                     val intent = Intent(this, TeacherDashboardActivity::class.java)
                     startActivity(intent)

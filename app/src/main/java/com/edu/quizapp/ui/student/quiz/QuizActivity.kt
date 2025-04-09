@@ -48,8 +48,16 @@ class QuizActivity : AppCompatActivity() {
         // Bắt đầu làm bài
         val currentUser = FirebaseAuth.getInstance().currentUser
         currentUser?.uid?.let { uid ->
-            viewModel.startQuiz(testId, uid)
+            // Đầu tiên tải bài kiểm tra, sau đó bắt đầu làm bài
             viewModel.loadTest(testId)
+            
+            // Đăng ký lắng nghe sự kiện khi bài kiểm tra đã được tải xong
+            viewModel.isLoading.observe(this) { isLoading ->
+                if (!isLoading && viewModel.questions.value?.isNotEmpty() == true) {
+                    // Chỉ bắt đầu làm bài khi đã tải xong câu hỏi
+                    viewModel.startQuiz(testId, uid)
+                }
+            }
         }
     }
 
@@ -128,6 +136,10 @@ class QuizActivity : AppCompatActivity() {
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.quizContent.visibility = if (isLoading) View.GONE else View.VISIBLE
+            
+            // Log visibility changes for debugging
+            android.util.Log.d("QuizActivity", "Loading state changed: $isLoading")
+            android.util.Log.d("QuizActivity", "Quiz content visibility: ${if (isLoading) "GONE" else "VISIBLE"}")
         }
     }
 

@@ -6,20 +6,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.edu.quizapp.data.models.Result
-import com.edu.quizapp.data.models.Test
 import com.edu.quizapp.data.repository.ResultRepository
 import com.edu.quizapp.data.repository.TestRepository
+import com.edu.quizapp.data.models.QuizResult
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class StudentResultViewModel : ViewModel() {
 
     private val resultRepository = ResultRepository()
     private val testRepository = TestRepository()
+    private val firestore = FirebaseFirestore.getInstance()
 
-    private val _results = MutableLiveData<List<ResultWithTestInfo>>()
-    val results: LiveData<List<ResultWithTestInfo>> = _results
+    private val _results = MutableLiveData<List<QuizResult>>()
+    val results: LiveData<List<QuizResult>> = _results
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
+    private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     // Class để kết hợp kết quả và thông tin bài kiểm tra
@@ -31,27 +34,18 @@ class StudentResultViewModel : ViewModel() {
 
     fun fetchResultsForStudent(studentId: String) {
         viewModelScope.launch {
-            _isLoading.value = true
             try {
-                val resultsList = resultRepository.getResultsByStudentId(studentId)
+                _isLoading.value = true
+                val snapshot = firestore.collection("quiz_results")
+                    .whereEqualTo("studentId", studentId)
+                    .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                    .get()
+                    .await()
 
-                // Lấy thông tin bài kiểm tra cho mỗi kết quả
-                val resultsWithTests = mutableListOf<ResultWithTestInfo>()
-
-                for (result in resultsList) {
-                    val test = testRepository.getTestById(result.testId)
-                    test?.let {
-                        resultsWithTests.add(
-                            ResultWithTestInfo(
-                                result = result,
-                                testName = it.testName,
-                                testDuration = it.duration
-                            )
-                        )
-                    }
+                val resultsList = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(QuizResult::class.java)?.copy(id = doc.id)
                 }
-
-                _results.value = resultsWithTests
+                _results.value = resultsList
             } catch (e: Exception) {
                 Log.e("StudentResultViewModel", "Error fetching results: ${e.message}")
                 _results.value = emptyList()

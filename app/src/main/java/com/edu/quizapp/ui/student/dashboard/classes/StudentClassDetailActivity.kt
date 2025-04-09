@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.edu.quizapp.data.models.Question
 
 class StudentClassDetailActivity : AppCompatActivity() {
 
@@ -49,7 +50,7 @@ class StudentClassDetailActivity : AppCompatActivity() {
         binding.testsRecyclerView.adapter = testListAdapter
 
         binding.backButton.setOnClickListener {
-            finish() // Quay về form trước đó
+            finish()
         }
     }
 

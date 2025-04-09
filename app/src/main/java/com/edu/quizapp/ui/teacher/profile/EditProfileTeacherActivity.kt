@@ -62,6 +62,7 @@ class EditProfileTeacherActivity : AppCompatActivity() {
             if (teacher != null) {
                 binding.editPhoneLayout.editText?.setText(teacher.phone)
                 binding.editAddressLayout.editText?.setText(teacher.address)
+                binding.editImageUrlLayout.editText?.setText(teacher.profileImageUrl)
 
                 if (!teacher.profileImageUrl.isNullOrEmpty()) {
                     Glide.with(this)
@@ -106,37 +107,14 @@ class EditProfileTeacherActivity : AppCompatActivity() {
     private fun saveChanges() {
         val phone = binding.editPhoneLayout.editText?.text.toString()
         val address = binding.editAddressLayout.editText?.text.toString()
+        val imageUrl = binding.editImageUrlLayout.editText?.text.toString()
 
-        if (phone.isEmpty() || address.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show()
+        if (phone.isBlank() || address.isBlank()) {
+            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (selectedImageUri != null) {
-            uploadImageAndSave(phone, address)
-        } else {
-            saveTeacherData(phone, address, null)
-        }
-    }
-
-    private fun uploadImageAndSave(phone: String, address: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val imageUrl = uploadImageToFirebase(selectedImageUri!!)
-                saveTeacherData(phone, address, imageUrl)
-            } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@EditProfileTeacherActivity, "Upload ảnh thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private suspend fun uploadImageToFirebase(imageUri: Uri): String {
-        val storageRef = FirebaseStorage.getInstance().reference
-        val imageRef = storageRef.child("teachers/${FirebaseAuth.getInstance().currentUser?.uid}/${UUID.randomUUID()}")
-        imageRef.putFile(imageUri).await()
-        return imageRef.downloadUrl.await().toString()
+        saveTeacherData(phone, address, imageUrl)
     }
 
     private fun saveTeacherData(phone: String, address: String, imageUrl: String?) {

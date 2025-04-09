@@ -4,16 +4,18 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.edu.quizapp.R
 import com.edu.quizapp.data.models.Question
 import com.edu.quizapp.databinding.ActivityCreateQuestionsFromFileBinding
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -41,6 +43,36 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
 
         setupListeners()
         setupBottomNavigationTeacher()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.saveState.collectLatest { state ->
+                when (state) {
+                    is CreateQuestionsFromFileViewModel.SaveState.Idle -> {
+                        // Initial state, do nothing
+                    }
+                    is CreateQuestionsFromFileViewModel.SaveState.Saving -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.createQuestionsButton.isEnabled = false
+                    }
+                    is CreateQuestionsFromFileViewModel.SaveState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.createQuestionsButton.isEnabled = true
+                        Toast.makeText(this@CreateQuestionsFromFileActivity, state.message, Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@CreateQuestionsFromFileActivity, AddTestSuccessActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    is CreateQuestionsFromFileViewModel.SaveState.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.createQuestionsButton.isEnabled = true
+                        Toast.makeText(this@CreateQuestionsFromFileActivity, state.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -74,19 +106,18 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
             }
 
             testId?.let { testId ->
-                GlobalScope.launch(Dispatchers.IO) {
-                    readQuestionsFromFile(selectedFileUri!!, questionCount) { questions ->
-                        GlobalScope.launch(Dispatchers.Main) {
-                            viewModel.saveQuestions(questions, testId) { success, message ->
-                                if (success) {
-                                    // ... (chuyển sang AddTestSuccessActivity)
-                                    val intent = Intent(this@CreateQuestionsFromFileActivity, AddTestSuccessActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                } else {
-                                    Toast.makeText(this@CreateQuestionsFromFileActivity, message, Toast.LENGTH_SHORT).show()
-                                }
-                            }
+                binding.createQuestionsButton.isEnabled = false
+                binding.progressBar.visibility = View.VISIBLE
+                
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val questions = readQuestionsFromFile(selectedFileUri!!, questionCount)
+                        viewModel.saveQuestions(questions, testId)
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                            binding.createQuestionsButton.isEnabled = true
+                            Toast.makeText(this@CreateQuestionsFromFileActivity, "Lỗi đọc file: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -104,22 +135,13 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun readQuestionsFromFile(fileUri: Uri, questionCount: Int, callback: (List<Question>) -> Unit) {
-        withContext(Dispatchers.IO) {
-            try {
-                contentResolver.openInputStream(fileUri)?.use { inputStream ->
-                    val reader = BufferedReader(InputStreamReader(inputStream))
-                    val lines = reader.readLines()
-                    val questions = parseQuestionsFromLines(lines, questionCount)
-                    withContext(Dispatchers.Main) {
-                        callback(questions)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreateQuestionsFromFileActivity, "Lỗi đọc file: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
+    private suspend fun readQuestionsFromFile(fileUri: Uri, questionCount: Int): List<Question> {
+        return withContext(Dispatchers.IO) {
+            contentResolver.openInputStream(fileUri)?.use { inputStream ->
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val lines = reader.readLines()
+                parseQuestionsFromLines(lines, questionCount)
+            } ?: emptyList()
         }
     }
 
@@ -136,6 +158,7 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
 
                 val question = Question(
                     questionId = UUID.randomUUID().toString(),
+                    testId = testId ?: "",
                     questionText = questionText,
                     answers = answers,
                     correctAnswer = correctAnswer.toString()
@@ -149,9 +172,7 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
     private fun setupBottomNavigationTeacher() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
+
                 R.id.navigation_home -> {
                     val intent = Intent(this, TeacherDashboardActivity::class.java)
                     startActivity(intent)

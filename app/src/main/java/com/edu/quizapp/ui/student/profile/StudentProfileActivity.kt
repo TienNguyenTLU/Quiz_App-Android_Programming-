@@ -22,24 +22,26 @@ class StudentProfileActivity : AppCompatActivity() {
         binding = ActivityStudentProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[StudentProfileViewModel::class.java]
-
-        setupObservers()
+        setupToolbar()
+        setupViewModel()
         setupListeners()
-        loadStudentData()
-
-        // Hiển thị Fragment mặc định (nếu bạn muốn hiển thị một Fragment cho thông tin hồ sơ)
-        // showProfileInfo() // Nếu bạn có một fragment thông tin hồ sơ riêng
+        
+        // Set selected item for bottom navigation
+        binding.bottomNavigation.selectedItemId = R.id.navigation_profile
     }
 
-    private fun loadStudentData() {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        if (uid != null) {
-            viewModel.loadStudentData(uid)
-        } else {
-            Toast.makeText(this, "Không thể lấy thông tin người dùng.", Toast.LENGTH_SHORT).show()
-            finish()
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbar.toolbarTitle.text = "Hồ sơ"
+        binding.toolbar.backButton.setOnClickListener {
+            onBackPressed()
         }
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(this)[StudentProfileViewModel::class.java]
+        setupObservers()
     }
 
     private fun setupObservers() {
@@ -67,6 +69,7 @@ class StudentProfileActivity : AppCompatActivity() {
                 .load(imageUrl)
                 .placeholder(R.drawable.ic_profile_placeholder)
                 .error(R.drawable.ic_profile_placeholder)
+                .circleCrop()
                 .into(binding.profileImage)
         } else {
             binding.profileImage.setImageResource(R.drawable.ic_profile_placeholder)
@@ -86,19 +89,17 @@ class StudentProfileActivity : AppCompatActivity() {
             showLogoutFragment()
         }
 
+        // Thiết lập bottom navigation sau khi đã set selected item
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, StudentDashboardActivity::class.java))
+                    val intent = Intent(this, StudentDashboardActivity::class.java)
+                    startActivity(intent)
                     finish()
                     true
                 }
-                R.id.navigation_notifications -> {
-                    // Xử lý sự kiện notifications (nếu cần)
-                    true
-                }
                 R.id.navigation_profile -> {
-                    // Xử lý sự kiện profile (nếu cần)
+                    // Đã ở trang profile nên không cần làm gì
                     true
                 }
                 else -> false

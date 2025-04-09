@@ -15,16 +15,38 @@ class QuizRepository {
 
     suspend fun getQuestionsForTest(questionIds: List<String>): List<Question> {
         return try {
+            Log.d("QuizRepository", "Getting questions for test with IDs: $questionIds")
             val questions = mutableListOf<Question>()
+            
+            // If questionIds is empty, return empty list
+            if (questionIds.isEmpty()) {
+                Log.e("QuizRepository", "No question IDs provided")
+                return emptyList()
+            }
+            
+            // Fetch questions by their IDs
             for (id in questionIds) {
+                Log.d("QuizRepository", "Fetching question with ID: $id")
                 val snapshot = questionsCollection.document(id).get().await()
-                snapshot.toObject(Question::class.java)?.let {
-                    questions.add(it)
+                val data = snapshot.data
+                if (data != null) {
+                    val question = Question.fromMap(data)
+                    Log.d("QuizRepository", "Successfully loaded question: ${question.questionText}")
+                    Log.d("QuizRepository", "Answers: ${question.answers}")
+                    Log.d("QuizRepository", "Correct answer: ${question.correctAnswer}")
+                    questions.add(question)
+                    Log.d("QuizRepository", "Added question to list. Current size: ${questions.size}")
+                } else {
+                    Log.e("QuizRepository", "Failed to load question with ID: $id - No data found")
                 }
             }
+            
+            Log.d("QuizRepository", "Total questions loaded: ${questions.size}")
+            Log.d("QuizRepository", "Returning questions list with size: ${questions.size}")
             questions
         } catch (e: Exception) {
             Log.e("QuizRepository", "Error getting questions: ${e.message}")
+            Log.e("QuizRepository", "Stack trace: ${e.stackTraceToString()}")
             emptyList()
         }
     }
@@ -70,15 +92,21 @@ class QuizRepository {
         val attemptRef = attemptsCollection.document(attemptId)
         val currentTime = System.currentTimeMillis()
 
+        Log.d("QuizRepository", "Finishing test attempt: $attemptId")
+        Log.d("QuizRepository", "Setting completed to true")
+
         attemptRef.update(
             mapOf(
                 "endTime" to currentTime,
-                "isCompleted" to true
+                "completed" to true
             )
         ).await()
 
-        return attemptRef.get().await().toObject(TestAttempt::class.java)
+        val finishedAttempt = attemptRef.get().await().toObject(TestAttempt::class.java)
             ?: throw Exception("Không tìm thấy bài làm")
+        
+        Log.d("QuizRepository", "Test attempt finished. isCompleted: ${finishedAttempt.isCompleted}")
+        return finishedAttempt
     }
 
     suspend fun getTestAttempt(attemptId: String): TestAttempt? {
@@ -86,11 +114,13 @@ class QuizRepository {
     }
 
     suspend fun getTestAttemptsByStudentAndTest(studentId: String, testId: String): List<TestAttempt> {
-        return attemptsCollection
+        Log.d("QuizRepository", "Getting attempts for student: $studentId, test: $testId")
+        val attempts = attemptsCollection
             .whereEqualTo("studentId", studentId)
             .whereEqualTo("testId", testId)
             .get()
             .await()
             .toObjects(TestAttempt::class.java)
+        return attempts
     }
 }

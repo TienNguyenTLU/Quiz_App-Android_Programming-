@@ -69,9 +69,7 @@ class TeacherDashboardActivity : AppCompatActivity() {
     private fun setupBottomNavigationTeacher() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
+
                 R.id.navigation_home -> {
                     // Chỉ trả về true để giữ nguyên Activity hiện tại
                     true

@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.edu.quizapp.R
 import com.edu.quizapp.data.models.Student
 import com.edu.quizapp.databinding.ActivityEditProfileStudentBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class EditProfileStudentActivity : AppCompatActivity() {
@@ -25,6 +26,21 @@ class EditProfileStudentActivity : AppCompatActivity() {
         binding = ActivityEditProfileStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupToolbar()
+        setupViewModel()
+        setupListeners()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbar.toolbarTitle.text = "Chỉnh sửa thông tin cá nhân"
+        binding.toolbar.backButton.setOnClickListener {
+            onBackPressed()
+        }
+    }
+
+    private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[ProfileSettingsStudentViewModel::class.java]
 
         lifecycleScope.launch {
@@ -44,6 +60,7 @@ class EditProfileStudentActivity : AppCompatActivity() {
                     binding.editPhone.setText(student.phone)
                     binding.editAddress.setText(student.address)
                     binding.editStudentsId.setText(student.studentsId)
+                    binding.editImageUrl.setText(student.profileImageUrl)
                 }
             }
 
@@ -54,7 +71,9 @@ class EditProfileStudentActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun setupListeners() {
         binding.profileImage.setOnClickListener {
             openImageChooser()
         }
@@ -65,11 +84,13 @@ class EditProfileStudentActivity : AppCompatActivity() {
                 val user = viewModel.user.value
                 if(student != null && user != null){
                     val updatedStudent = Student(
+                        uid = user.uid ?: return@launch,
                         name = user.name,
                         email = user.email,
                         phone = binding.editPhone.text.toString(),
                         address = binding.editAddress.text.toString(),
-                        studentsId = binding.editStudentsId.text.toString()
+                        studentsId = binding.editStudentsId.text.toString(),
+                        profileImageUrl = binding.editImageUrl.text.toString()
                     )
 
                     viewModel.updateStudent(updatedStudent, selectedImageUri)
@@ -85,10 +106,6 @@ class EditProfileStudentActivity : AppCompatActivity() {
                     Toast.makeText(this@EditProfileStudentActivity, "Không thể lấy thông tin người dùng", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-
-        binding.backButton.setOnClickListener {
-            finish()
         }
     }
 

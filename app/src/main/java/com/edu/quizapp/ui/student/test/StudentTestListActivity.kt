@@ -14,6 +14,7 @@ class StudentTestListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentTestListBinding
     private lateinit var viewModel: StudentTestViewModel
     private lateinit var adapter: StudentTestListAdapter
+    private var classCode: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +28,11 @@ class StudentTestListActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this).get(StudentTestViewModel::class.java)
+        viewModel = ViewModelProvider(this)[StudentTestViewModel::class.java]
 
         viewModel.tests.observe(this) { tests ->
             adapter.updateData(tests)
 
-            // Hiển thị thông báo nếu không có bài kiểm tra
             if (tests.isEmpty()) {
                 binding.emptyView.visibility = View.VISIBLE
                 binding.testRecyclerView.visibility = View.GONE
@@ -41,7 +41,6 @@ class StudentTestListActivity : AppCompatActivity() {
                 binding.testRecyclerView.visibility = View.VISIBLE
             }
 
-            // Ẩn ProgressBar khi đã tải xong
             binding.progressBar.visibility = View.GONE
         }
 
@@ -54,6 +53,11 @@ class StudentTestListActivity : AppCompatActivity() {
         adapter = StudentTestListAdapter(emptyList())
         binding.testRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.testRecyclerView.adapter = adapter
+
+        adapter.setOnItemClickListener { test ->
+            // Handle test item click
+            // You can start a new activity or show test details
+        }
     }
 
     private fun setupListeners() {
@@ -69,12 +73,17 @@ class StudentTestListActivity : AppCompatActivity() {
 
     private fun loadTests() {
         binding.progressBar.visibility = View.VISIBLE
-        val classCode = intent.getStringExtra("CLASS_CODE") ?: ""
+        classCode = intent.getStringExtra("CLASS_CODE") ?: ""
 
         if (classCode.isNotEmpty()) {
             viewModel.fetchTestsByClassCode(classCode)
         } else {
             viewModel.fetchTestsForStudent()
         }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        loadTests()
     }
 }

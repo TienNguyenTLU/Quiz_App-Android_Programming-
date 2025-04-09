@@ -22,6 +22,9 @@ class ProfileSettingsTeacherViewModel : ViewModel() {
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
 
+    private val _logoutEvent = MutableLiveData<Boolean>()
+    val logoutEvent: LiveData<Boolean> = _logoutEvent
+
     init {
         loadTeacherData()
         loadUserData()
@@ -60,6 +63,7 @@ class ProfileSettingsTeacherViewModel : ViewModel() {
 
     fun logout() {
         FirebaseAuth.getInstance().signOut()
+        _logoutEvent.value = true
     }
 
     fun changePassword(oldPassword: String, newPassword: String): LiveData<Boolean> {

@@ -10,6 +10,7 @@ import com.edu.quizapp.R
 import com.edu.quizapp.adapter.student.classes.StudentClassAdapter
 import com.edu.quizapp.data.repository.TeacherRepository
 import com.edu.quizapp.databinding.ActivityClassStudentBinding
+import com.edu.quizapp.ui.student.dashboard.StudentDashboardActivity
 import com.edu.quizapp.ui.student.profile.StudentProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -26,27 +27,28 @@ class StudentClassActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("StudentClassActivity", "onCreate()")
 
-        viewModel = ViewModelProvider(this)[StudentClassViewModel::class.java]
-        teacherRepository = TeacherRepository() // Khởi tạo teacherRepository ở đây
-
+        setupToolbar()
+        setupViewModel()
         setupRecyclerView()
-        setupObservers()
         setupBottomNavigation()
 
         val studentId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         viewModel.loadStudentClasses(studentId)
     }
 
-    private fun setupRecyclerView() {
-        adapter = StudentClassAdapter(emptyList(), teacherRepository) // Truyền teacherRepository vào adapter
-
-        binding.classRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@StudentClassActivity)
-            post {
-                adapter = adapter
-            }
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbar.toolbarTitle.text = "Lớp học của tôi"
+        binding.toolbar.backButton.setOnClickListener {
+            onBackPressed()
         }
-        Log.d("StudentClassActivity", "setupRecyclerView() called, adapter set: $adapter")
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(this)[StudentClassViewModel::class.java]
+        teacherRepository = TeacherRepository() // Khởi tạo teacherRepository ở đây
+        setupObservers()
     }
 
     private fun setupObservers() {
@@ -55,18 +57,27 @@ class StudentClassActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupRecyclerView() {
+        adapter = StudentClassAdapter(emptyList(), teacherRepository) // Truyền teacherRepository vào adapter
+        binding.classRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.classRecyclerView.adapter = adapter
+        Log.d("StudentClassActivity", "setupRecyclerView() called, adapter set: $adapter")
+    }
+
     private fun setupBottomNavigation() {
+        // Thiết lập bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
                 R.id.navigation_home -> {
+                    val intent = Intent(this, StudentDashboardActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.navigation_profile -> {
                     val intent = Intent(this, StudentProfileActivity::class.java)
                     startActivity(intent)
+                    finish()
                     true
                 }
                 else -> false

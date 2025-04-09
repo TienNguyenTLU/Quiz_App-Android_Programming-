@@ -29,6 +29,7 @@ class StudentDashboardActivity : AppCompatActivity() {
         setupFeatureLayoutClickListeners()
         setupSearchButton()
 
+        // Set selected item for bottom navigation
         binding.bottomNavigation.selectedItemId = R.id.navigation_home
     }
 
@@ -67,11 +68,9 @@ class StudentDashboardActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
+        // Thiết lập bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
                 R.id.navigation_home -> {
                     // Chỉ trả về true để giữ nguyên Activity hiện tại
                     true
