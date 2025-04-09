@@ -122,15 +122,15 @@
             android:exported="false"/>
 
         <activity
-            android:name=".ui.teacher.dashboard.category.CategoryManagementActivity"
+            android:name=".ui.student.dashboard.classes.StudentClassActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.teacher.dashboard.category.ClassesByCategoryActivity"
+            android:name=".ui.student.dashboard.classes.StudentClassDetailActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.teacher.dashboard.category.TestsByCategoryActivity"
+            android:name=".ui.student.dashboard.test.StudentTestActivity"
             android:exported="false"/>
     </application>
 </manifest>

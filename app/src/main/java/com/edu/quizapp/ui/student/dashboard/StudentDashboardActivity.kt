@@ -9,6 +9,8 @@ import com.edu.quizapp.R
 import com.edu.quizapp.databinding.ActivityStudentDashboardBinding
 import com.edu.quizapp.ui.student.profile.StudentProfileActivity
 import com.bumptech.glide.Glide
+import com.edu.quizapp.ui.student.dashboard.classes.StudentClassActivity
+import com.edu.quizapp.ui.student.dashboard.test.StudentTestActivity
 
 class StudentDashboardActivity : AppCompatActivity() {
 
@@ -24,6 +26,8 @@ class StudentDashboardActivity : AppCompatActivity() {
 
         setupObservers()
         setupBottomNavigation()
+        setupFeatureLayoutClickListeners()
+        setupSearchButton()
 
         binding.bottomNavigation.selectedItemId = R.id.navigation_home
     }
@@ -79,6 +83,32 @@ class StudentDashboardActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun setupSearchButton() {
+        binding.searchButton.setOnClickListener {
+            val classCode = binding.searchBar.text.toString().trim()
+            if (classCode.isNotEmpty()) {
+                viewModel.findClassByCode(classCode)
+            } else {
+                Toast.makeText(this, "Vui lòng nhập mã lớp.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupFeatureLayoutClickListeners() {
+//        binding.featureLayout.getChildAt(0).setOnClickListener{
+//            val intent = Intent(this, CategoryManagementActivity::class.java)
+//            startActivity(intent)
+//        }
+        binding.featureLayout.getChildAt(1).setOnClickListener{
+            val intent = Intent(this, StudentTestActivity::class.java)
+            startActivity(intent)
+        }
+        binding.featureLayout.getChildAt(2).setOnClickListener {
+            val intent = Intent(this, StudentClassActivity::class.java)
+            startActivity(intent)
         }
     }
 }

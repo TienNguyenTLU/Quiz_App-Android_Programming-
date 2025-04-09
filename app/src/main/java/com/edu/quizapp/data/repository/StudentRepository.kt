@@ -17,7 +17,7 @@ class StudentRepository {
     suspend fun getStudentById(uid: String): Student? {
         Log.d("StudentRepository", "Fetching student with uid: $uid")
         return try {
-            val snapshot = studentsCollection.whereEqualTo("uid", uid).get().await()
+            val snapshot = studentsCollection.whereEqualTo("uid", uid).get().await() // Sửa dòng này
             Log.d("StudentRepository", "Firestore snapshot: $snapshot")
             if (!snapshot.isEmpty) {
                 val student = Student.fromMap(snapshot.documents[0].data!!)
@@ -60,8 +60,8 @@ class StudentRepository {
             }
 
             val newStudent = student.copy(profileImageUrl = imageUrl ?: "")
-            studentsCollection.document(student.studentsId).set(newStudent.toMap()).await()
-            Log.d("StudentRepository", "Student created successfully: ${student.studentsId}")
+            studentsCollection.document(student.uid).set(newStudent.toMap()).await() // Sửa dòng này
+            Log.d("StudentRepository", "Student created successfully: ${student.uid}") // Sửa log
             true
         } catch (e: Exception) {
             Log.e("StudentRepository", "Error creating student: ${e.message}")

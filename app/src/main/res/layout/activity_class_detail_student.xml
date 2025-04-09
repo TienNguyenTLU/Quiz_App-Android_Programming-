@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:context=".ui.student.dashboard.classes.StudentClassDetailActivity">
 
     <include
-        android:id="@+id/top_bar"
+        android:id="@+id/topBar"
         layout="@layout/top_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back" />
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chi tiết lớp học"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"/>
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,7 +57,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/class_name"
+                    android:id="@+id/classNameDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Toán 01"
@@ -38,25 +66,25 @@
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
-                    android:id="@+id/class_code"
+                    android:id="@+id/classCodeDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mã lớp: M01" />
 
                 <TextView
-                    android:id="@+id/teacher_name"
+                    android:id="@+id/teacherNameDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giáo viên: Nguyễn Văn A" />
 
                 <TextView
-                    android:id="@+id/student_count"
+                    android:id="@+id/studentCountDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số lượng học sinh: 45/60" />
 
                 <TextView
-                    android:id="@+id/test_count"
+                    android:id="@+id/testCountDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số lượng bài kiểm tra hiện có: 1" />
@@ -66,57 +94,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bài kiểm tra khả dụng"
+                android:text="Danh sách bài kiểm tra khả dụng"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/testsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#BBDEFB"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/test_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tên bài kiểm tra: Toán 15p" />
-
-                <TextView
-                    android:id="@+id/test_code"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mã bài kiểm tra: ME01" />
-
-                <TextView
-                    android:id="@+id/test_class"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lớp: M01" />
-
-                <TextView
-                    android:id="@+id/question_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Số câu: 20" />
-
-                <TextView
-                    android:id="@+id/test_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thời lượng: 15p" />
-
-            </LinearLayout>
+                android:layout_marginTop="8dp"
+                tools:listitem="@layout/test_list_item"/>
 
         </LinearLayout>
 
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_navigation_menu" />

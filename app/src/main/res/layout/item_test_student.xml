@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="#B3E5FC"> <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/testName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên bài kiểm tra: Toán 15p"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/testClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mã lớp: M01"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/questionCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số câu: 20"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/testDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thời lượng: 15p" />
+
+    <TextView
+        android:id="@+id/testStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái: Chưa hoàn thành"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/holo_red_dark" />
+
+</LinearLayout>
+
+</androidx.cardview.widget.CardView>

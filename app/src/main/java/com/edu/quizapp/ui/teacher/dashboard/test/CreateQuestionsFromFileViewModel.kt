@@ -1,17 +1,18 @@
-// CreateQuestionsFromFileViewModel.kt
 package com.edu.quizapp.ui.teacher.dashboard.test
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.edu.quizapp.data.models.Question
 import com.edu.quizapp.data.repository.QuestionRepository
+import com.edu.quizapp.data.repository.TestRepository
 import kotlinx.coroutines.launch
 
 class CreateQuestionsFromFileViewModel : ViewModel() {
 
     private val questionRepository = QuestionRepository()
+    private val testRepository = TestRepository()
 
-    fun saveQuestions(questions: List<Question>, callback: (Boolean, String) -> Unit) {
+    fun saveQuestions(questions: List<Question>, testId: String, callback: (Boolean, String) -> Unit) {
         viewModelScope.launch {
             try {
                 var allQuestionsSaved = true
@@ -26,7 +27,13 @@ class CreateQuestionsFromFileViewModel : ViewModel() {
                     }
                 }
                 if (allQuestionsSaved) {
-                    callback(true, "Lưu câu hỏi thành công.")
+                    // Cập nhật questionCount trong collection "tests"
+                    val updateSuccess = testRepository.updateQuestionCount(testId, questions.size)
+                    if (updateSuccess) {
+                        callback(true, "Lưu câu hỏi thành công.")
+                    } else {
+                        callback(false, "Lưu câu hỏi thành công, nhưng không cập nhật được số lượng câu hỏi.")
+                    }
                 } else {
                     callback(false, errorMessage)
                 }

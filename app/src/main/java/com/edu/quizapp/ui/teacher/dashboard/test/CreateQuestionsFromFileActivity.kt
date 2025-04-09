@@ -77,12 +77,12 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
                 GlobalScope.launch(Dispatchers.IO) {
                     readQuestionsFromFile(selectedFileUri!!, questionCount) { questions ->
                         GlobalScope.launch(Dispatchers.Main) {
-                            viewModel.saveQuestions(questions) { success, message ->
+                            viewModel.saveQuestions(questions, testId) { success, message ->
                                 if (success) {
-                                    // Chuyển sang AddTestSuccessActivity khi thành công
+                                    // ... (chuyển sang AddTestSuccessActivity)
                                     val intent = Intent(this@CreateQuestionsFromFileActivity, AddTestSuccessActivity::class.java)
                                     startActivity(intent)
-                                    finish() // Kết thúc CreateQuestionsFromFileActivity
+                                    finish()
                                 } else {
                                     Toast.makeText(this@CreateQuestionsFromFileActivity, message, Toast.LENGTH_SHORT).show()
                                 }
@@ -132,13 +132,13 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
             if (parts.size >= 3) {
                 val questionText = parts[0].trim()
                 val answers = parts.subList(1, parts.size - 1).map { it.trim() }
-                val correctAnswer = parts.last().trim().toLongOrNull() ?: 0
+                val correctAnswer = parts.last().trim() ?: 0
 
                 val question = Question(
                     questionId = UUID.randomUUID().toString(),
                     questionText = questionText,
                     answers = answers,
-                    correctAnswer = correctAnswer
+                    correctAnswer = correctAnswer.toString()
                 )
                 questions.add(question)
             }
