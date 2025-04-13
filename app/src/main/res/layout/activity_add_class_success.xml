@@ -78,7 +78,7 @@
                 android:id="@+id/back_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/primary_color"
+                android:backgroundTint="@android:color/darker_gray"
                 android:layout_marginTop="24dp"
                 android:text="Quay lại"
                 app:cornerRadius="9dp" />
