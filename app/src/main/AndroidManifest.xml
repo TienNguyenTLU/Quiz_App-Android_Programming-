@@ -140,5 +140,17 @@
         <activity
             android:name=".ui.student.result.QuizResultActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.analystic.AnalysticActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.analystic.byclass.AnalysticByClassActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.analystic.byclass.StatisticalClassActivity"
+            android:exported="false"/>
     </application>
 </manifest>

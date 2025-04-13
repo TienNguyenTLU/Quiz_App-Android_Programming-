@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.edu.quizapp.R
 import com.edu.quizapp.databinding.ActivityTeacherDashboardBinding
+import com.edu.quizapp.ui.teacher.dashboard.analystic.AnalysticActivity
 import com.edu.quizapp.ui.teacher.dashboard.classroom.ClassManagementActivity
 import com.edu.quizapp.ui.teacher.dashboard.test.TestManagementActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
@@ -85,10 +86,10 @@ class TeacherDashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureLayoutClickListeners() {
-//        binding.featureLayout.getChildAt(0).setOnClickListener{
-//            val intent = Intent(this, CategoryManagementActivity::class.java)
-//            startActivity(intent)
-//        }
+        binding.featureLayout.getChildAt(0).setOnClickListener{
+            val intent = Intent(this, AnalysticActivity::class.java)
+            startActivity(intent)
+        }
         binding.featureLayout.getChildAt(1).setOnClickListener{
             val intent = Intent(this, TestManagementActivity::class.java)
             startActivity(intent)

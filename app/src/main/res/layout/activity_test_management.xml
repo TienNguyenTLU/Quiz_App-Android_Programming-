@@ -41,18 +41,30 @@
             android:singleLine="true"
             android:imeOptions="actionSearch"/>
 
+
+
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_card" />
 
     <TextView
         android:id="@+id/test_management_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="Danh sách bài kiểm tra"
         android:textSize="18sp"
         android:textColor="#333333"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/back_button"
         app:layout_constraintTop_toBottomOf="@id/search_card" />
 
     <androidx.recyclerview.widget.RecyclerView

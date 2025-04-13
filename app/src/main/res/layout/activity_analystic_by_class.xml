@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
-<!--    tools:context=".ui.teacher.dashboard.stats.StatsByClassActivity">-->
+    android:background="#F5F5F5"
+    tools:context=".ui.teacher.dashboard.analystic.byclass.AnalysticByClassActivity">
 
     <include
         android:id="@+id/top_bar_include"
@@ -14,18 +14,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar_include" />
+
     <TextView
         android:id="@+id/title_stats_by_class"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
         android:text="Thống kê theo lớp"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#333333"
         app:layout_constraintTop_toBottomOf="@id/top_bar_include"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/back_button" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_class_list_stats"

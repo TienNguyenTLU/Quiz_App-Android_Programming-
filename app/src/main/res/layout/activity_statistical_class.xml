@@ -41,7 +41,7 @@
         app:layout_constraintStart_toEndOf="@id/button_back"
         app:layout_constraintTop_toBottomOf="@id/top_bar_include" />
 
-    <ScrollView
+    <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -52,7 +52,7 @@
 
         <TableLayout
             android:id="@+id/table_class_list_stats"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:stretchColumns="*"
@@ -67,6 +67,13 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#333333" />
+
+                <TextView
+                    android:text="Lớp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:gravity="center" />
 
                 <TextView
                     android:text="Bài kiểm tra"
@@ -97,6 +104,55 @@
 
         </TableLayout>
 
-    </ScrollView>
+    </HorizontalScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/no_tests_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:visibility="gone"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:layout_constraintTop_toBottomOf="@id/title_stats_by_class"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_no_tests"
+                app:tint="#1E88E5"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lớp này chưa có bài kiểm tra nào!"
+                android:textSize="18sp"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vui lòng tạo bài kiểm tra mới để thực hiện thống kê điểm theo lớp."
+                android:textSize="16sp"
+                android:textColor="#777777"
+                android:gravity="center"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
