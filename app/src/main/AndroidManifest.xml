@@ -152,5 +152,13 @@
         <activity
             android:name=".ui.teacher.dashboard.analystic.byclass.StatisticalClassActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.analystic.bytest.AnalysticByTestActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.teacher.dashboard.analystic.bytest.StatisticalTestActivity"
+            android:exported="false"/>
     </application>
 </manifest>

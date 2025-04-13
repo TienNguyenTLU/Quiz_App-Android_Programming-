@@ -8,7 +8,7 @@ import com.edu.quizapp.R
 import com.edu.quizapp.databinding.ActivityAnalysticBinding
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.dashboard.analystic.byclass.AnalysticByClassActivity
-//import com.edu.quizapp.ui.teacher.dashboard.analystic.bytest.AnalysticByTestActivity
+import com.edu.quizapp.ui.teacher.dashboard.analystic.bytest.AnalysticByTestActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -44,10 +44,10 @@ class AnalysticActivity : AppCompatActivity() {
                 Log.e("AnalysticActivity", "Teacher ID is missing.")
             }
         }
-//
-//        binding.statsByTestCard.setOnClickListener {
-//            startActivity(Intent(this, AnalysticByTestActivity::class.java))
-//        }
+
+        binding.statsByTestCard.setOnClickListener {
+            startActivity(Intent(this, AnalysticByTestActivity::class.java))
+        }
     }
 
     private fun setupBottomNavigationTeacher() {
