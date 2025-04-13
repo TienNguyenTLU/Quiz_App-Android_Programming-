@@ -18,6 +18,7 @@
             android:id="@+id/test_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            app:tint="@color/primary_color"
             android:src="@drawable/ic_test_placeholder"
             android:layout_marginEnd="16dp" />
 

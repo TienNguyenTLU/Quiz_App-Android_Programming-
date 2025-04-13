@@ -81,27 +81,6 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_category" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Danh mục"
-                android:textSize="14sp"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
                 android:src="@drawable/ic_test" />
 
             <TextView
@@ -123,7 +102,7 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_class" />
+                android:src="@drawable/ic_class_placeholder" />
 
             <TextView
                 android:layout_width="wrap_content"

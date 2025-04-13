@@ -55,7 +55,9 @@
                 android:id="@+id/select_file_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chọn file" />
+                android:text="Chọn file"
+                android:backgroundTint="@color/primary_color"
+                app:cornerRadius="9dp" />
 
             <TextView
                 android:id="@+id/file_path_text_view"
@@ -125,9 +127,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@android:color/darker_gray"
             android:text="Quay lại"
-            android:textColor="@color/black" />
+            android:textColor="@color/white"
+            app:cornerRadius="9dp" />
 
         <Button
             android:id="@+id/create_questions_button"
@@ -136,7 +139,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:text="Lưu"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:cornerRadius="9dp" />
 
     </LinearLayout>
 

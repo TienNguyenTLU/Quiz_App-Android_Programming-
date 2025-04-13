@@ -92,7 +92,7 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_class" />
+                android:src="@drawable/ic_class_placeholder" />
 
             <TextView
                 android:layout_width="wrap_content"

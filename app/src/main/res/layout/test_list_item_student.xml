@@ -57,10 +57,12 @@
             android:id="@+id/startTestButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_marginTop="12dp"
+            android:backgroundTint="@color/primary_color"
             android:text="Bắt đầu làm bài"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/purple_500" />
+            app:cornerRadius="9dp" />
 
     </LinearLayout>
 

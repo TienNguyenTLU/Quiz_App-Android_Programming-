@@ -101,11 +101,11 @@ class StudentDashboardActivity : AppCompatActivity() {
 //            val intent = Intent(this, CategoryManagementActivity::class.java)
 //            startActivity(intent)
 //        }
-        binding.featureLayout.getChildAt(1).setOnClickListener{
+        binding.featureLayout.getChildAt(0).setOnClickListener{
             val intent = Intent(this, StudentTestActivity::class.java)
             startActivity(intent)
         }
-        binding.featureLayout.getChildAt(2).setOnClickListener {
+        binding.featureLayout.getChildAt(1).setOnClickListener {
             val intent = Intent(this, StudentClassActivity::class.java)
             startActivity(intent)
         }
