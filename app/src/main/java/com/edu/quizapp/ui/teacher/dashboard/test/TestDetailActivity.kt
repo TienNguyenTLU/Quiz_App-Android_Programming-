@@ -4,14 +4,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.edu.quizapp.data.models.Test
+import com.edu.quizapp.data.repository.UserRepository
 import com.edu.quizapp.databinding.ActivityTestDetailBinding
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TestDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTestDetailBinding
     private val db = FirebaseFirestore.getInstance()
+    private lateinit var sharedUserViewModel: SharedUserViewModel
 
     companion object {
         const val REQUEST_CODE_TEST_DETAIL = 123
@@ -30,8 +35,26 @@ class TestDetailActivity : AppCompatActivity() {
             // Xử lý lỗi nếu testId là null
         }
 
+        // Khởi tạo SharedUserViewModel
+        val userRepository = UserRepository()
+        val factory = SharedUserViewModelFactory(userRepository)
+        sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
+
+        observeSharedUserViewModel()
+
         binding.backButton.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun observeSharedUserViewModel() {
+        sharedUserViewModel.userData.observe(this) { user ->
+            if (user != null) {
+                binding.topBarInclude.userName.text = user.name
+                binding.topBarInclude.welcomeMessage.text = "Chào mừng đến với 3T"
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

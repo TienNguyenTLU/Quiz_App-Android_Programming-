@@ -8,10 +8,6 @@
     android:background="#FFFFFF"
     tools:context=".ui.student.dashboard.classes.StudentClassDetailActivity">
 
-    <include
-        android:id="@+id/topBar"
-        layout="@layout/top_bar" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

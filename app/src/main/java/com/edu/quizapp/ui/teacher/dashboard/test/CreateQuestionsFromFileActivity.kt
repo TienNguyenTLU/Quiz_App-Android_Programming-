@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.edu.quizapp.R
 import com.edu.quizapp.data.models.Question
+import com.edu.quizapp.data.repository.UserRepository
 import com.edu.quizapp.databinding.ActivityCreateQuestionsFromFileBinding
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +31,7 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
     private lateinit var viewModel: CreateQuestionsFromFileViewModel
     private var selectedFileUri: Uri? = null
     private var testId: String? = null
+    private lateinit var sharedUserViewModel: SharedUserViewModel
 
     companion object {
         private const val FILE_PICKER_REQUEST_CODE = 100
@@ -41,9 +45,26 @@ class CreateQuestionsFromFileActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[CreateQuestionsFromFileViewModel::class.java]
         testId = intent.getStringExtra("testId")
 
+        // Khởi tạo SharedUserViewModel
+        val userRepository = UserRepository()
+        val factory = SharedUserViewModelFactory(userRepository)
+        sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
+
+        observeSharedUserViewModel()
         setupListeners()
         setupBottomNavigationTeacher()
         observeViewModel()
+    }
+
+    private fun observeSharedUserViewModel() {
+        sharedUserViewModel.userData.observe(this) { user ->
+            if (user != null) {
+                binding.topBarInclude.userName.text = user.name
+                binding.topBarInclude.welcomeMessage.text = "Chào mừng đến với 3T"
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observeViewModel() {

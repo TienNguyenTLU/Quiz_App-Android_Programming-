@@ -53,7 +53,12 @@ class TeacherProfileViewModel : ViewModel() {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid != null) {
-                result.value = teacherRepository.updateTeacher(uid, teacher, imageUri)
+                val isSuccess = teacherRepository.updateTeacher(uid, teacher, imageUri)
+                if (isSuccess) {
+                    _teacherData.value = teacher // Cập nhật LiveData
+                    loadTeacherData() // Load lại data từ Firestore
+                }
+                result.value = isSuccess
             } else {
                 result.value = false
             }

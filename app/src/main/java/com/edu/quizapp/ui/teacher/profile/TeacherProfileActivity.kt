@@ -45,7 +45,7 @@ class TeacherProfileActivity : AppCompatActivity() {
             if (teacher != null) {
                 binding.profileName.text = teacher.name
                 binding.profileEmail.text = teacher.email
-                loadProfileImage(teacher.profileImageUrl)
+                loadProfileImage(teacher.profileImageUrl) // Gọi lại loadProfileImage()
             } else {
                 Toast.makeText(this, "Không thể tải thông tin giáo viên.", Toast.LENGTH_SHORT).show()
             }
@@ -65,6 +65,7 @@ class TeacherProfileActivity : AppCompatActivity() {
                 .load(imageUrl)
                 .placeholder(R.drawable.ic_profile_placeholder)
                 .error(R.drawable.ic_profile_placeholder)
+                .circleCrop()
                 .into(binding.profileImage)
         } else {
             binding.profileImage.setImageResource(R.drawable.ic_profile_placeholder)

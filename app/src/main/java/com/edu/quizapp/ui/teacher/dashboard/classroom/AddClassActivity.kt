@@ -8,7 +8,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.edu.quizapp.R
+import com.edu.quizapp.data.repository.UserRepository
 import com.edu.quizapp.databinding.ActivityAddClassBinding
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +27,7 @@ class AddClassActivity : AppCompatActivity() {
     private lateinit var viewModel: ClassManagementViewModel
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
+    private lateinit var sharedUserViewModel: SharedUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,12 @@ class AddClassActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             finish()
         }
+
+        // Khởi tạo SharedUserViewModel
+        val userRepository = UserRepository()
+        val factory = SharedUserViewModelFactory(userRepository)
+        sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
+        observeSharedUserViewModel()
     }
 
     private fun openImageChooser() {
@@ -54,6 +64,17 @@ class AddClassActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
+        }
+    }
+
+    private fun observeSharedUserViewModel() {
+        sharedUserViewModel.userData.observe(this) { user ->
+            if (user != null) {
+                binding.topBarInclude.userName.text = user.name
+                binding.topBarInclude.welcomeMessage.text = "Chào mừng đến với 3T"
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -15,6 +15,10 @@ import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
+import com.edu.quizapp.data.repository.UserRepository
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 
 class EditClassActivity : AppCompatActivity() {
 
@@ -22,6 +26,7 @@ class EditClassActivity : AppCompatActivity() {
     private val classRepository = ClassRepository()
     private val studentRepository = StudentRepository()
     private var classId: String? = null
+    private lateinit var sharedUserViewModel: SharedUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +48,22 @@ class EditClassActivity : AppCompatActivity() {
             finish()
         }
 
+        // Khởi tạo SharedUserViewModel
+        val userRepository = UserRepository()
+        val factory = SharedUserViewModelFactory(userRepository)
+        sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
+        observeSharedUserViewModel()
+    }
+
+    private fun observeSharedUserViewModel() {
+        sharedUserViewModel.userData.observe(this) { user ->
+            if (user != null) {
+                binding.topBarInclude.userName.text = user.name
+                binding.topBarInclude.welcomeMessage.text = "Chào mừng đến với 3T"
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun loadClassDetails(classId: String) {

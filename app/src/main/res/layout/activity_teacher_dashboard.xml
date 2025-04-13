@@ -14,8 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/search_bar"
+    <TextView
+        android:id="@+id/search_placeholder"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -24,9 +24,12 @@
         android:background="@drawable/search_bar_background"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="8dp"
-        android:hint="Tìm kiếm"
+        android:text="Tính năng tìm kiếm sẽ được cập nhật"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#808080"
+        android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/top_bar_include"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -38,7 +41,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/search_bar">
+        app:layout_constraintTop_toBottomOf="@id/search_placeholder">
 
         <LinearLayout
             android:layout_width="0dp"

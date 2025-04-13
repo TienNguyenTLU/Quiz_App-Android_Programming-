@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.edu.quizapp.R
 import com.edu.quizapp.data.models.Test
+import com.edu.quizapp.data.repository.UserRepository
 import com.edu.quizapp.databinding.ActivityAddTestBinding
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
 import java.util.UUID
@@ -18,6 +21,7 @@ class AddTestActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddTestBinding
     private lateinit var viewModel: AddTestViewModel
+    private lateinit var sharedUserViewModel: SharedUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +30,14 @@ class AddTestActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[AddTestViewModel::class.java]
 
+        // Khởi tạo SharedUserViewModel
+        val userRepository = UserRepository()
+        val factory = SharedUserViewModelFactory(userRepository)
+        sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
+        observeSharedUserViewModel()
         setupListeners()
         setupBottomNavigationTeacher()
+        observeSharedUserViewModel()
     }
 
     private fun setupBottomNavigationTeacher() {
@@ -45,6 +55,17 @@ class AddTestActivity : AppCompatActivity() {
                     true
                 }
                 else -> false
+            }
+        }
+    }
+
+    private fun observeSharedUserViewModel() {
+        sharedUserViewModel.userData.observe(this) { user ->
+            if (user != null) {
+                binding.topBarInclude.userName.text = user.name
+                binding.topBarInclude.welcomeMessage.text = "Chào mừng đến với 3T"
+            } else {
+                Toast.makeText(this, "Không thể tải thông tin người dùng.", Toast.LENGTH_SHORT).show()
             }
         }
     }

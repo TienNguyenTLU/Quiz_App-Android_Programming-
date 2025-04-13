@@ -16,12 +16,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.edu.quizapp.data.models.Question
+import com.edu.quizapp.data.repository.UserRepository
+import com.edu.quizapp.ui.shared.SharedUserViewModel
+import com.edu.quizapp.ui.shared.SharedUserViewModelFactory
 
 class StudentClassDetailActivity : AppCompatActivity() {
 
@@ -53,6 +58,7 @@ class StudentClassDetailActivity : AppCompatActivity() {
             finish()
         }
     }
+
 
     private fun loadClassDetails(classId: String) {
         CoroutineScope(Dispatchers.IO).launch {
