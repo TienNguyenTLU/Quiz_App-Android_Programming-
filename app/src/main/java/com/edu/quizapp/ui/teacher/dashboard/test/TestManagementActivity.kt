@@ -37,6 +37,10 @@ class TestManagementActivity : AppCompatActivity() {
         binding.addTestButton.setOnClickListener {
             startActivity(Intent(this, AddTestActivity::class.java))
         }
+
+        binding.backButton.setOnClickListener{
+            finish()
+        }
     }
 
     override fun onResume() {

@@ -118,21 +118,34 @@ class StudentDashboardViewModel : ViewModel() {
         }
     }
 
-    fun joinClass(userId: String, classId: String) {
+    fun joinClass(studentsId: String, classId: String) {
         viewModelScope.launch {
             try {
-                classRepository.addRequestToClass(classId, userId) // Sử dụng instance classRepository
-                // Gửi thông báo đến giáo viên
-                val notification = Notification(
-                    notificationId = UUID.randomUUID().toString(),
-                    senderId = userId,
-                    message = "Yêu cầu gia nhập lớp học từ học sinh.",
-                    timestamp = System.currentTimeMillis()
-                )
-                classRepository.addNotification(classId, notification) // Sử dụng instance classRepository
+                val classroom = classRepository.getClassById(classId)
+                if (classroom != null) {
+                    if (classroom.students.contains(studentsId)) {
+                        _joinClassResult.value = "Bạn đã gia nhập lớp này rồi."
+                    } else {
+                        classRepository.addStudentToClass(classId, FirebaseAuth.getInstance().currentUser?.uid ?: "")
+                        val notification = Notification(
+                            notificationId = UUID.randomUUID().toString(),
+                            senderId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                            message = "Học sinh đã gia nhập lớp học.",
+                            timestamp = System.currentTimeMillis()
+                        )
+                        classRepository.addNotification(classId, notification)
+                        _joinClassResult.value = "Gia nhập lớp thành công."
+                    }
+                } else {
+                    _joinClassResult.value = "Lớp học không tồn tại."
+                }
             } catch (e: Exception) {
                 Log.e("DashboardViewModel", "Error joining class: ${e.message}")
+                _joinClassResult.value = "Có lỗi xảy ra, vui lòng thử lại sau."
             }
         }
     }
+
+    private val _joinClassResult = MutableLiveData<String>()
+    val joinClassResult: LiveData<String> = _joinClassResult
 }

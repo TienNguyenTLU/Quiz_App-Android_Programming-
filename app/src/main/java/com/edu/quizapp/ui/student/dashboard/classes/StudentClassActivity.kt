@@ -2,6 +2,8 @@ package com.edu.quizapp.ui.student.dashboard.classes
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +33,7 @@ class StudentClassActivity : AppCompatActivity() {
         setupViewModel()
         setupRecyclerView()
         setupBottomNavigation()
+        setupSearchBar()
 
         val studentId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         viewModel.loadStudentClasses(studentId)
@@ -47,25 +50,37 @@ class StudentClassActivity : AppCompatActivity() {
 
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[StudentClassViewModel::class.java]
-        teacherRepository = TeacherRepository() // Khởi tạo teacherRepository ở đây
+        teacherRepository = TeacherRepository()
         setupObservers()
     }
 
     private fun setupObservers() {
-        viewModel.classes.observe(this) { classes ->
+        // Cập nhật adapter với danh sách lớp học đã lọc
+        viewModel.filteredClasses.observe(this) { classes ->
             adapter.updateClasses(classes)
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = StudentClassAdapter(emptyList(), teacherRepository) // Truyền teacherRepository vào adapter
+        adapter = StudentClassAdapter(emptyList(), teacherRepository)
         binding.classRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.classRecyclerView.adapter = adapter
         Log.d("StudentClassActivity", "setupRecyclerView() called, adapter set: $adapter")
     }
 
+    private fun setupSearchBar() {
+        binding.searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.filterClasses(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
     private fun setupBottomNavigation() {
-        // Thiết lập bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {

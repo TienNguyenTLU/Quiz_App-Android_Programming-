@@ -11,6 +11,7 @@ import com.edu.quizapp.ui.student.profile.StudentProfileActivity
 import com.bumptech.glide.Glide
 import com.edu.quizapp.ui.student.dashboard.classes.StudentClassActivity
 import com.edu.quizapp.ui.student.dashboard.test.StudentTestActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class StudentDashboardActivity : AppCompatActivity() {
 
@@ -27,7 +28,7 @@ class StudentDashboardActivity : AppCompatActivity() {
         setupObservers()
         setupBottomNavigation()
         setupFeatureLayoutClickListeners()
-        setupSearchButton()
+        setupJoinClassButtonClickListener()
 
         // Set selected item for bottom navigation
         binding.bottomNavigation.selectedItemId = R.id.navigation_home
@@ -49,6 +50,10 @@ class StudentDashboardActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.joinClassResult.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
         viewModel.studentData.observe(this) { student ->
             if (student != null) {
                 // Load ảnh đại diện từ student nếu có
@@ -63,6 +68,16 @@ class StudentDashboardActivity : AppCompatActivity() {
                 }
             } else {
                 viewModel.createStudentIfNotExist()
+            }
+        }
+
+        viewModel.foundClass.observe(this) { foundClass ->
+            if (foundClass == null) {
+                Toast.makeText(this, "Lớp học không tồn tại.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.studentData.value?.studentsId?.let { studentsId ->
+                    viewModel.joinClass(studentsId, foundClass.classId)
+                }
             }
         }
     }
@@ -85,22 +100,7 @@ class StudentDashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSearchButton() {
-        binding.searchButton.setOnClickListener {
-            val classCode = binding.searchBar.text.toString().trim()
-            if (classCode.isNotEmpty()) {
-                viewModel.findClassByCode(classCode)
-            } else {
-                Toast.makeText(this, "Vui lòng nhập mã lớp.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     private fun setupFeatureLayoutClickListeners() {
-//        binding.featureLayout.getChildAt(0).setOnClickListener{
-//            val intent = Intent(this, CategoryManagementActivity::class.java)
-//            startActivity(intent)
-//        }
         binding.featureLayout.getChildAt(0).setOnClickListener{
             val intent = Intent(this, StudentTestActivity::class.java)
             startActivity(intent)
@@ -108,6 +108,17 @@ class StudentDashboardActivity : AppCompatActivity() {
         binding.featureLayout.getChildAt(1).setOnClickListener {
             val intent = Intent(this, StudentClassActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun setupJoinClassButtonClickListener() {
+        binding.joinClassButton.setOnClickListener {
+            val classCode = binding.classCodeInput.text.toString()
+            if (classCode.isNotEmpty()) {
+                viewModel.findClassByCode(classCode)
+            } else {
+                Toast.makeText(this, "Vui lòng nhập mã lớp.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

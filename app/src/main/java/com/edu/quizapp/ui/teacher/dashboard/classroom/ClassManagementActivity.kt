@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.edu.quizapp.R
-import com.edu.quizapp.adapter.teacher.category.ClassListAdapter
 import com.edu.quizapp.databinding.ActivityClassManagementBinding
 import com.edu.quizapp.ui.teacher.dashboard.TeacherDashboardActivity
 import com.edu.quizapp.ui.teacher.profile.TeacherProfileActivity
@@ -23,12 +22,15 @@ class ClassManagementActivity : AppCompatActivity() {
 
         classManagementViewModel = ViewModelProvider(this)[ClassManagementViewModel::class.java]
 
-        setupClassRecyclerView()
         observeViewModel()
         setupBottomNavigationTeacher()
 
         binding.addClassButton.setOnClickListener {
             startActivity(Intent(this, AddClassActivity::class.java))
+        }
+
+        binding.backButton.setOnClickListener{
+            finish()
         }
     }
 
@@ -37,18 +39,7 @@ class ClassManagementActivity : AppCompatActivity() {
         classManagementViewModel.loadClasses()
     }
 
-    private fun setupClassRecyclerView() {
-        binding.classListRecyclerView.layoutManager = LinearLayoutManager(this)
-        classManagementViewModel.classList.observe(this) { classes ->
-            binding.classListRecyclerView.adapter = ClassListAdapter(classes, { selectedClass ->
-                classManagementViewModel.onClassClicked(selectedClass)
-            }, { selectedClass ->
-                val intent = Intent(this, ClassDetailsActivity::class.java)
-                intent.putExtra("CLASS_ID", selectedClass.classId)
-                startActivity(intent)
-            })
-        }
-    }
+
 
     private fun observeViewModel() {
         classManagementViewModel.navigateToClassDetails.observe(this) { classes ->
