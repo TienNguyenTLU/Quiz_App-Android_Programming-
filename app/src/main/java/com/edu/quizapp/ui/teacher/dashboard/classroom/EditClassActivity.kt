@@ -84,13 +84,15 @@ class EditClassActivity : AppCompatActivity() {
     private fun displayClassDetails(classes: Classes) {
         binding.editClassName.setText(classes.className)
         binding.editClassCode.setText(classes.classCode)
-        binding.editStudentCount.setText(classes.students.size.toString())
+        binding.editMaxStudents.setText(classes.maxStudents.toString()) // Hiển thị maxStudents
     }
 
     private fun saveChanges() {
         val className = binding.editClassName.text.toString()
         val classCode = binding.editClassCode.text.toString()
         val studentsId = binding.editAddStudent.text.toString()
+        val maxStudentsString = binding.editMaxStudents.text.toString()
+        val maxStudents = maxStudentsString.toIntOrNull() ?: 0 // Lấy maxStudents
 
         Log.d("EditClassActivity", "Attempting to add student with studentsId: $studentsId to classId: $classId")
 
@@ -104,7 +106,7 @@ class EditClassActivity : AppCompatActivity() {
                 try {
                     val classes = classRepository.getClassById(classId)
                     if (classes != null) {
-                        val updatedClass = classes.copy(className = className, classCode = classCode)
+                        val updatedClass = classes.copy(className = className, classCode = classCode, maxStudents = maxStudents) // Cập nhật maxStudents
                         classRepository.createClass(updatedClass)
 
                         if (studentsId.isNotEmpty()) {

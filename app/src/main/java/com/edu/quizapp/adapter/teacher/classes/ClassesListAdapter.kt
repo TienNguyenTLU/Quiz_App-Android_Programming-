@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.edu.quizapp.R
@@ -11,12 +12,13 @@ import com.edu.quizapp.data.models.Classes
 
 class ClassesListAdapter(
     private var classes: List<Classes>,
-    private val onItemClick: (Classes) -> Unit // Thêm listener
+    private val onDetailsClick: (Classes) -> Unit // Listener cho nút chi tiết
 ) :
     RecyclerView.Adapter<ClassesListAdapter.ClassesViewHolder>() {
 
     class ClassesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val classNameTextView: TextView = itemView.findViewById(R.id.class_name)
+        val detailsButton: ImageButton = itemView.findViewById(R.id.details_button)
 
         fun bind(classes: Classes) {
             Log.d("ClassesListAdapter", "Binding class: ${classes.className}")
@@ -33,8 +35,8 @@ class ClassesListAdapter(
         Log.d("ClassesListAdapter", "Binding position: $position")
         try {
             holder.bind(classes[position])
-            holder.itemView.setOnClickListener { // Xử lý click item
-                onItemClick(classes[position])
+            holder.detailsButton.setOnClickListener { // Xử lý click nút chi tiết
+                onDetailsClick(classes[position])
             }
         } catch (e: Exception) {
             Log.e("ClassesListAdapter", "Error binding position $position: ${e.message}")

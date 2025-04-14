@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -81,7 +82,9 @@ class AddClassActivity : AppCompatActivity() {
     private fun saveClass() {
         val className = binding.classNameEditText.text.toString()
         val classCode = binding.classCodeEditText.text.toString()
-        val maxStudents = binding.maxStudentsEditText.text.toString().toIntOrNull() ?: 0 // Lấy maxStudents
+        val maxStudentsString = binding.maxStudentsEditText.text.toString()
+        Log.d("AddClassActivity", "maxStudentsEditText: $maxStudentsString")
+        val maxStudents = maxStudentsString.toIntOrNull() ?: 0
         val subject = binding.subjectEditText.text.toString()
 
         if (className.isEmpty()) {

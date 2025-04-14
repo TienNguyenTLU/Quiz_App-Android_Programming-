@@ -125,6 +125,8 @@ class StudentDashboardViewModel : ViewModel() {
                 if (classroom != null) {
                     if (classroom.students.contains(studentsId)) {
                         _joinClassResult.value = "Bạn đã gia nhập lớp này rồi."
+                    } else if (classroom.students.size >= classroom.maxStudents && classroom.maxStudents >= 0) {
+                        _joinClassResult.value = "Lớp đã đầy."
                     } else {
                         classRepository.addStudentToClass(classId, FirebaseAuth.getInstance().currentUser?.uid ?: "")
                         val notification = Notification(

@@ -63,10 +63,9 @@ class ClassManagementViewModel : ViewModel() {
     fun addClass(
         className: String,
         classCode: String,
-        studentCount: Int,
+        maxStudents: Int, // <-- Sử dụng maxStudents
         subject: String,
-        classImageUrl: String?,
-        maxStudents: Int = 0 // Thêm maxStudents vào tham số
+        classImageUrl: String?
     ) {
         viewModelScope.launch {
             try {
@@ -78,7 +77,7 @@ class ClassManagementViewModel : ViewModel() {
                     teacherId = teacherId,
                     classImageUrl = classImageUrl ?: "",
                     classCode = classCode,
-                    maxStudents = maxStudents // Thêm maxStudents vào newClass
+                    maxStudents = maxStudents // <-- Sử dụng maxStudents
                 )
                 val success = withContext(Dispatchers.IO) {
                     classRepository.createClass(newClass)

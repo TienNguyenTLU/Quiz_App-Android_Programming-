@@ -32,7 +32,7 @@ class ClassManagementActivity : AppCompatActivity() {
 
         classManagementViewModel = ViewModelProvider(this)[ClassManagementViewModel::class.java]
 
-        classesListAdapter = ClassesListAdapter(emptyList()) { classes ->
+        classesListAdapter = ClassesListAdapter(emptyList()) { classes -> // Listener cho nút chi tiết
             val intent = Intent(this, ClassDetailsActivity::class.java)
             intent.putExtra("CLASS_ID", classes.classId)
             startActivity(intent)
