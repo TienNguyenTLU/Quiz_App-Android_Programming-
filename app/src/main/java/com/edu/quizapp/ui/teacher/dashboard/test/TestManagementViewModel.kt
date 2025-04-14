@@ -21,6 +21,8 @@ class TestManagementViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+    private var allTests: List<Test> = emptyList() // Lưu trữ danh sách bài kiểm tra gốc
+
     init {
         loadTests()
     }
@@ -29,8 +31,8 @@ class TestManagementViewModel : ViewModel() {
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val testList = testRepository.getAllTests()
-                _tests.value = testList
+                allTests = testRepository.getAllTests() // Lưu trữ danh sách gốc
+                _tests.value = allTests
                 _isLoading.value = false
                 _errorMessage.value = null
             } catch (e: Exception) {
@@ -38,6 +40,13 @@ class TestManagementViewModel : ViewModel() {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun searchTests(query: String) {
+        val filteredTests = allTests.filter { test ->
+            test.testName.contains(query, ignoreCase = true)
+        }
+        _tests.value = filteredTests
     }
 
     fun deleteTest(testId: String) {

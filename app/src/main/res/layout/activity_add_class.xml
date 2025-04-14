@@ -107,17 +107,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Số lượng sinh viên"
+                android:text="Số lượng sinh viên tối đa"
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Nhập số lượng">
+                android:hint="Nhập số lượng tối đa">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/student_count_edit_text"
+                    android:id="@+id/max_students_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"

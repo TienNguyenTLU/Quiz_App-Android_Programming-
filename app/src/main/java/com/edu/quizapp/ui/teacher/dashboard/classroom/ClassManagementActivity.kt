@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.edu.quizapp.R
@@ -41,6 +42,7 @@ class ClassManagementActivity : AppCompatActivity() {
 
         observeViewModel()
         setupBottomNavigationTeacher()
+        setupSearchBar() // Thêm hàm setupSearchBar
 
         binding.addClassButton.setOnClickListener {
             startActivity(Intent(this, AddClassActivity::class.java))
@@ -59,6 +61,12 @@ class ClassManagementActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         classManagementViewModel.loadClasses()
+    }
+
+    private fun setupSearchBar() {
+        binding.searchBar.doAfterTextChanged { text ->
+            classManagementViewModel.searchClasses(text.toString())
+        }
     }
 
     private fun observeSharedUserViewModel() {

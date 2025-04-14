@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.edu.quizapp.R
@@ -51,11 +52,18 @@ class TestManagementActivity : AppCompatActivity() {
         val factory = SharedUserViewModelFactory(userRepository)
         sharedUserViewModel = ViewModelProvider(this, factory)[SharedUserViewModel::class.java]
         observeSharedUserViewModel()
+        setupSearchBar()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadTests() // Tải lại dữ liệu khi Activity được resume
+    }
+
+    private fun setupSearchBar() {
+        binding.searchBar.doAfterTextChanged { text ->
+            viewModel.searchTests(text.toString())
+        }
     }
 
     private fun setupRecyclerView() {

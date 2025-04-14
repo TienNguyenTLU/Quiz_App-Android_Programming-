@@ -25,6 +25,8 @@ class ClassManagementViewModel : ViewModel() {
     private val _addClassResult = MutableLiveData<Boolean>()
     val addClassResult: LiveData<Boolean> = _addClassResult
 
+    private var allClasses: List<Classes> = emptyList()
+
     init {
         loadClasses()
     }
@@ -32,15 +34,22 @@ class ClassManagementViewModel : ViewModel() {
     fun loadClasses() {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val classes = withContext(Dispatchers.IO) {
+                allClasses = withContext(Dispatchers.IO) {
                     classRepository.getAllClasses()
                 }
-                _classList.value = classes
+                _classList.value = allClasses
                 Log.d("ClassManagementViewModel", "Loaded classes successfully")
             } catch (e: Exception) {
                 Log.e("ClassManagementViewModel", "Error loading classes: ${e.message}")
             }
         }
+    }
+
+    fun searchClasses(query: String) {
+        val filteredClasses = allClasses.filter { classes ->
+            classes.className.contains(query, ignoreCase = true)
+        }
+        _classList.value = filteredClasses
     }
 
     fun onClassClicked(classes: Classes) {
@@ -51,7 +60,14 @@ class ClassManagementViewModel : ViewModel() {
         _navigateToClassDetails.value = null
     }
 
-    fun addClass(className: String, classCode: String, studentCount: Int, subject: String, classImageUrl: String?) {
+    fun addClass(
+        className: String,
+        classCode: String,
+        studentCount: Int,
+        subject: String,
+        classImageUrl: String?,
+        maxStudents: Int = 0 // Thêm maxStudents vào tham số
+    ) {
         viewModelScope.launch {
             try {
                 val teacherId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -61,7 +77,8 @@ class ClassManagementViewModel : ViewModel() {
                     className = className,
                     teacherId = teacherId,
                     classImageUrl = classImageUrl ?: "",
-                    classCode = classCode
+                    classCode = classCode,
+                    maxStudents = maxStudents // Thêm maxStudents vào newClass
                 )
                 val success = withContext(Dispatchers.IO) {
                     classRepository.createClass(newClass)

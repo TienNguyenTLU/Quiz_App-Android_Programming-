@@ -80,8 +80,8 @@ class AddClassActivity : AppCompatActivity() {
 
     private fun saveClass() {
         val className = binding.classNameEditText.text.toString()
-        val classCode = binding.classCodeEditText.text.toString() // Truy xuất classCode
-        val studentCount = binding.studentCountEditText.text.toString().toIntOrNull() ?: 0
+        val classCode = binding.classCodeEditText.text.toString()
+        val maxStudents = binding.maxStudentsEditText.text.toString().toIntOrNull() ?: 0 // Lấy maxStudents
         val subject = binding.subjectEditText.text.toString()
 
         if (className.isEmpty()) {
@@ -95,7 +95,7 @@ class AddClassActivity : AppCompatActivity() {
             null
         }
 
-        viewModel.addClass(className, classCode, studentCount, subject, imageUrl)
+        viewModel.addClass(className, classCode, maxStudents, subject, imageUrl) // Truyền maxStudents
         viewModel.addClassResult.observe(this) { success ->
             if (success) {
                 startActivity(Intent(this, AddClassSuccessActivity::class.java))
