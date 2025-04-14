@@ -80,7 +80,7 @@ class TestDetailActivity : AppCompatActivity() {
     private fun displayTestData(test: Test) {
         binding.testName.text = test.testName
         binding.testCode.text = "Mã bài kiểm tra: ${test.testId}"
-        binding.teacherName.text = "Giáo viên: ${test.classCode}"
+        binding.teacherName.text = "Mã lớp: ${test.classCode}"
         binding.questionCount.text = "Số lượng câu hỏi: ${test.questionCount}"
         binding.duration.text = "Thời gian làm bài: ${test.duration} phút"
         // Thêm các trường khác nếu cần

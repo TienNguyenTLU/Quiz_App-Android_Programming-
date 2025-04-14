@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5">
@@ -41,11 +40,38 @@
         app:layout_constraintStart_toEndOf="@id/button_back"
         app:layout_constraintTop_toBottomOf="@id/top_bar_include" />
 
+    <LinearLayout
+        android:id="@+id/export_csv_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_button_background"
+        android:padding="12dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/title_stats_by_class"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"> <!-- căn giữa -->
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_file_export"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xuất file CSV"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/title_stats_by_class"
+        app:layout_constraintTop_toBottomOf="@id/export_csv_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -100,10 +126,9 @@
                 android:visibility="gone"
                 android:layout_span="3"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp" />
 
         </TableLayout>
-
     </HorizontalScrollView>
 
     <androidx.cardview.widget.CardView
@@ -115,7 +140,7 @@
         android:visibility="gone"
         app:cardCornerRadius="12dp"
         app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@id/title_stats_by_class"
+        app:layout_constraintTop_toBottomOf="@id/export_csv_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -132,7 +157,7 @@
                 android:layout_height="80dp"
                 android:src="@drawable/ic_no_tests"
                 app:tint="#1E88E5"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,7 +166,7 @@
                 android:textSize="18sp"
                 android:textColor="#333333"
                 android:textStyle="bold"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -150,7 +175,7 @@
                 android:textSize="16sp"
                 android:textColor="#777777"
                 android:gravity="center"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

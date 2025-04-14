@@ -1,6 +1,7 @@
 package com.edu.quizapp.data.repository
 
 import android.util.Log
+import com.edu.quizapp.data.models.Teacher
 import com.edu.quizapp.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,6 +11,7 @@ class UserRepository {
     private val db = FirebaseFirestore.getInstance()
     private val userCollection = db.collection("users")
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     suspend fun getUserByUid(uid: String): User? {
         return try {
@@ -21,6 +23,26 @@ class UserRepository {
             }
         } catch (e: Exception) {
             Log.e("UserRepository", "Error getting user by UID: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun isTeacher(uid: String): Boolean {
+        return try {
+            val document = firestore.collection("teachers").document(uid).get().await()
+            document.exists()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun getTeacherByUid(uid: String): Teacher? {
+        return try {
+            val document = firestore.collection("teachers").document(uid).get().await()
+            document.toObject(Teacher::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }

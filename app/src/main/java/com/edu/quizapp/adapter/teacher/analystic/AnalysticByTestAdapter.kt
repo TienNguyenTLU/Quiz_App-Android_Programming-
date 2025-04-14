@@ -19,17 +19,12 @@ class AnalysticByTestAdapter(
 
     inner class AnalysticByTestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val testName: TextView = itemView.findViewById(R.id.test_name)
-        val teacherName: TextView = itemView.findViewById(R.id.test_date)
+        val durationTextView: TextView = itemView.findViewById(R.id.test_date)
 
         fun bind(test: Test) {
             testName.text = test.testName
-            val classObj = classes[test.classId]
-            if (classObj != null) {
-                val teacher = teachers[classObj.teacherId]
-                teacherName.text = "Người tạo: ${teacher?.name ?: "Unknown"}"
-            } else {
-                teacherName.text = "Người tạo: Unknown"
-            }
+            // Hiển thị thời gian làm bài trực tiếp từ Firestore
+            durationTextView.text = "Thời gian: ${test.duration} phút"
         }
     }
 
@@ -41,7 +36,7 @@ class AnalysticByTestAdapter(
     override fun onBindViewHolder(holder: AnalysticByTestViewHolder, position: Int) {
         holder.bind(tests[position])
         holder.itemView.setOnClickListener {
-            onItemClick(tests[position]) // Truyền Test được chọn
+            onItemClick(tests[position])
         }
     }
 

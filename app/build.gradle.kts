@@ -94,4 +94,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Export file csv
+    implementation("com.opencsv:opencsv:5.5.2")
 }

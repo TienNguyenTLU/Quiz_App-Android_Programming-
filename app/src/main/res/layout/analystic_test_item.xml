@@ -30,7 +30,7 @@
             android:id="@+id/test_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Người tạo"
+            android:text="Thời gian làm bài: "
             android:textSize="14sp"
             android:textColor="#666666" />
 

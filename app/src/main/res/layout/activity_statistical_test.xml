@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F5F5F5">
 
     <LinearLayout
@@ -14,8 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_marginBottom="16dp">
 
             <ImageButton
@@ -32,34 +32,35 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Thống kê điểm theo bài kiểm tra: Toán"  android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#333333" />
+                android:text="Thống kê điểm theo bài kiểm tra: Toán"
+                android:textColor="#333333"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:layout_marginBottom="16dp">
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FFFFFF"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#FFFFFF">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Tổng quan"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:textColor="#333333"
-                    android:layout_marginBottom="8dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -70,58 +71,58 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
                             android:text="Điểm trung bình"
-                            android:textSize="16sp"
                             android:textColor="#666666"
-                            android:layout_marginBottom="4dp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/average_score"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="7.5"
+                            android:textColor="#2196F3"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:textColor="#2196F3" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="#EEEEEE"
                         android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp" />
+                        android:layout_marginEnd="16dp"
+                        android:background="#EEEEEE" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
                             android:text="Số học sinh đạt"
-                            android:textSize="16sp"
                             android:textColor="#666666"
-                            android:layout_marginBottom="4dp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/passed_students_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="30/40"
+                            android:textColor="#4CAF50"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:textColor="#4CAF50" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -131,14 +132,44 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bảng điểm chi tiết"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bảng điểm chi tiết"
+                android:textColor="#333333"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_button_background"
+                android:padding="12dp"
+                android:id="@+id/export_csv_button">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_file_export"
+                    android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xuất file CSV"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TableLayout
             android:id="@+id/scores_table"
@@ -156,19 +187,19 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Học sinh"
+                    android:textColor="#333333"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Điểm"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
                     android:gravity="end"
-                    android:minWidth="60dp"/>
+                    android:minWidth="60dp"
+                    android:text="Điểm"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </TableRow>
 
         </TableLayout>

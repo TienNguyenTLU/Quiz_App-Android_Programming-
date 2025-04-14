@@ -19,8 +19,13 @@ class AnalysticByTestViewModel(private val repository: AnalysticByTestRepository
         viewModelScope.launch {
             val tests = repository.getTests()
             val teachers = repository.getTeachers()
-            val classes = repository.getClasses() // Lấy classes từ Repository
-            _testsAndTeachersAndClasses.value = Triple(tests, teachers, classes)
+            val classes = repository.getClasses()
+
+            if (tests.isNotEmpty() && teachers.isNotEmpty() && classes.isNotEmpty()) {
+                _testsAndTeachersAndClasses.value = Triple(tests, teachers, classes)
+            } else {
+                _testsAndTeachersAndClasses.value = Triple(emptyList(), emptyMap(), emptyMap())
+            }
         }
     }
 }
