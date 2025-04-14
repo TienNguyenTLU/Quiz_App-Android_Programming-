@@ -30,13 +30,11 @@ class StudentDashboardActivity : AppCompatActivity() {
         setupFeatureLayoutClickListeners()
         setupJoinClassButtonClickListener()
 
-        // Set selected item for bottom navigation
         binding.bottomNavigation.selectedItemId = R.id.navigation_home
     }
 
     override fun onResume() {
         super.onResume()
-        // Cập nhật giao diện khi Activity được resume
         viewModel.loadData()
     }
 
@@ -56,7 +54,6 @@ class StudentDashboardActivity : AppCompatActivity() {
 
         viewModel.studentData.observe(this) { student ->
             if (student != null) {
-                // Load ảnh đại diện từ student nếu có
                 if (!student.profileImageUrl.isNullOrEmpty()) {
                     Glide.with(this)
                         .load(student.profileImageUrl)
@@ -75,19 +72,17 @@ class StudentDashboardActivity : AppCompatActivity() {
             if (foundClass == null) {
                 Toast.makeText(this, "Lớp học không tồn tại.", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.studentData.value?.studentsId?.let { studentsId ->
-                    viewModel.joinClass(studentsId, foundClass.classId)
+                foundClass.classId?.let { classId ->
+                    viewModel.joinClass(classId)
                 }
             }
         }
     }
 
     private fun setupBottomNavigation() {
-        // Thiết lập bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Chỉ trả về true để giữ nguyên Activity hiện tại
                     true
                 }
                 R.id.navigation_profile -> {
@@ -101,7 +96,7 @@ class StudentDashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureLayoutClickListeners() {
-        binding.featureLayout.getChildAt(0).setOnClickListener{
+        binding.featureLayout.getChildAt(0).setOnClickListener {
             val intent = Intent(this, StudentTestActivity::class.java)
             startActivity(intent)
         }

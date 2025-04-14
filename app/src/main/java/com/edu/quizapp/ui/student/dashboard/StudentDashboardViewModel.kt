@@ -20,7 +20,7 @@ class StudentDashboardViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
     private val studentRepository = StudentRepository()
-    private val classRepository = ClassRepository() // Tạo instance của ClassRepository
+    private val classRepository = ClassRepository()
 
     private val _userData = MutableLiveData<User?>()
     val userData: LiveData<User?> = _userData
@@ -30,6 +30,9 @@ class StudentDashboardViewModel : ViewModel() {
 
     private val _foundClass = MutableLiveData<Classes?>()
     val foundClass: LiveData<Classes?> = _foundClass
+
+    private val _joinClassResult = MutableLiveData<String>()
+    val joinClassResult: LiveData<String> = _joinClassResult
 
     init {
         loadData()
@@ -109,7 +112,7 @@ class StudentDashboardViewModel : ViewModel() {
     fun findClassByCode(classCode: String) {
         viewModelScope.launch {
             try {
-                val classroom = classRepository.getAllClasses().find { it.classCode == classCode } // Sử dụng instance classRepository
+                val classroom = classRepository.getAllClasses().find { it.classCode == classCode }
                 _foundClass.value = classroom
             } catch (e: Exception) {
                 Log.e("DashboardViewModel", "Error finding class: ${e.message}")
@@ -118,17 +121,18 @@ class StudentDashboardViewModel : ViewModel() {
         }
     }
 
-    fun joinClass(studentsId: String, classId: String) {
+    fun joinClass(classId: String) {
         viewModelScope.launch {
             try {
                 val classroom = classRepository.getClassById(classId)
                 if (classroom != null) {
+                    val studentsId = _studentData.value?.studentsId ?: ""
                     if (classroom.students.contains(studentsId)) {
                         _joinClassResult.value = "Bạn đã gia nhập lớp này rồi."
                     } else if (classroom.students.size >= classroom.maxStudents && classroom.maxStudents >= 0) {
                         _joinClassResult.value = "Lớp đã đầy."
                     } else {
-                        classRepository.addStudentToClass(classId, FirebaseAuth.getInstance().currentUser?.uid ?: "")
+                        classRepository.addStudentToClass(classId, studentsId)
                         val notification = Notification(
                             notificationId = UUID.randomUUID().toString(),
                             senderId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
@@ -147,7 +151,4 @@ class StudentDashboardViewModel : ViewModel() {
             }
         }
     }
-
-    private val _joinClassResult = MutableLiveData<String>()
-    val joinClassResult: LiveData<String> = _joinClassResult
 }

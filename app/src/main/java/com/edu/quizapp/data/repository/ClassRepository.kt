@@ -50,15 +50,16 @@ class ClassRepository {
     }
 
     suspend fun addStudentToClass(classId: String, studentsId: String): Boolean {
-        Log.d("ClassRepository", "Adding studentId: $studentsId to classId: $classId")
+        Log.d("ClassRepository", "Adding studentsId: $studentsId to classId: $classId")
         return try {
+            // Add student's studentsId to class's students list
+            classCollection.document(classId).update("students", FieldValue.arrayUnion(studentsId)).await()
+
+            // Get student's uid from students collection
             val querySnapshot = db.collection("students").whereEqualTo("studentsId", studentsId).get().await()
             if (!querySnapshot.isEmpty) {
                 val studentDoc = querySnapshot.documents[0]
                 val studentUid = studentDoc.id
-
-                // Add student's studentsId to class's students list
-                classCollection.document(classId).update("students", FieldValue.arrayUnion(studentsId)).await()
 
                 // Add class to student's classes list
                 db.collection("students").document(studentUid).update("classes", FieldValue.arrayUnion(classId)).await()
@@ -96,7 +97,7 @@ class ClassRepository {
         }
     }
 
-    suspend fun getJoinRequests(classId: String): List<String> { // Cập nhật kiểu dữ liệu trả về
+    suspend fun getJoinRequests(classId: String): List<String> {
         val snapshot = classCollection.document(classId).get().await()
         val classes = snapshot.toObject(Classes::class.java)
         return classes?.requests ?: emptyList()
@@ -104,29 +105,23 @@ class ClassRepository {
 
     suspend fun approveJoinRequest(classId: String, studentId: String): Boolean {
         return try {
-            // Get the student to find their studentsId
+            // Get student's studentsId from students collection
             val studentDoc = db.collection("students").document(studentId).get().await()
-            val studentData = studentDoc.data
-            val studentsId = studentData?.get("studentsId") as? String ?: ""
-            
-            if (studentsId.isNotEmpty()) {
-                // Add student's studentsId to class's students list and remove from requests
-                classCollection.document(classId).update(
-                    mapOf(
-                        "students" to FieldValue.arrayUnion(studentsId),
-                        "requests" to FieldValue.arrayRemove(studentId)
-                    )
-                ).await()
-                
-                // Add class to student's classes list
-                db.collection("students").document(studentId).update("classes", FieldValue.arrayUnion(classId)).await()
-                
-                Log.d("ClassRepository", "approveJoinRequest Success with studentsId: $studentsId")
-                true
-            } else {
-                Log.e("ClassRepository", "Student has no studentsId")
-                false
-            }
+            val studentsId = studentDoc.data?.get("studentsId") as? String ?: ""
+
+            // Add student's studentsId to class's students list and remove from requests
+            classCollection.document(classId).update(
+                mapOf(
+                    "students" to FieldValue.arrayUnion(studentsId),
+                    "requests" to FieldValue.arrayRemove(studentId)
+                )
+            ).await()
+
+            // Add class to student's classes list
+            db.collection("students").document(studentId).update("classes", FieldValue.arrayUnion(classId)).await()
+
+            Log.d("ClassRepository", "approveJoinRequest Success with studentsId: $studentsId")
+            true
         } catch (e: Exception) {
             Log.e("ClassRepository", "Error approving join request: ${e.message}")
             false
@@ -134,26 +129,19 @@ class ClassRepository {
     }
 
     suspend fun removeStudentFromClass(classId: String, studentId: String): Boolean {
-        Log.d("ClassRepository", "Removing studentId: $studentId from classId: $classId")
         return try {
-            // Get the student to find their studentsId
+            // Get student's studentsId from students collection
             val studentDoc = db.collection("students").document(studentId).get().await()
-            val studentData = studentDoc.data
-            val studentsId = studentData?.get("studentsId") as? String ?: ""
-            
-            if (studentsId.isNotEmpty()) {
-                // Remove student's studentsId from class's students list
-                classCollection.document(classId).update("students", FieldValue.arrayRemove(studentsId)).await()
-                
-                // Remove class from student's classes list
-                db.collection("students").document(studentId).update("classes", FieldValue.arrayRemove(classId)).await()
-                
-                Log.d("ClassRepository", "removeStudentFromClass Success with studentsId: $studentsId")
-                true
-            } else {
-                Log.e("ClassRepository", "Student has no studentsId")
-                false
-            }
+            val studentsId = studentDoc.data?.get("studentsId") as? String ?: ""
+
+            // Remove student's studentsId from class's students list
+            classCollection.document(classId).update("students", FieldValue.arrayRemove(studentsId)).await()
+
+            // Remove class from student's classes list
+            db.collection("students").document(studentId).update("classes", FieldValue.arrayRemove(classId)).await()
+
+            Log.d("ClassRepository", "removeStudentFromClass Success with studentsId: $studentsId")
+            true
         } catch (e: Exception) {
             Log.e("ClassRepository", "Error removing student from class: ${e.message}")
             false
