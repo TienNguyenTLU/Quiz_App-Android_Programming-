@@ -16,9 +16,10 @@ class StatisticalRepository {
     private val classesCollection = db.collection("classes")
 
     suspend fun getResultsByClass(classId: String): List<Result> {
-        return resultsCollection.get().await().toObjects(Result::class.java).filter { result ->
-            val student = studentsCollection.document(result.studentId).get().await().toObject(Student::class.java)
-            student?.classes?.contains(classId) == true
+        val results = resultsCollection.get().await().toObjects(Result::class.java)
+        return results.filter { result ->
+            val test = testsCollection.document(result.testId).get().await().toObject(Test::class.java)
+            test?.classId == classId
         }
     }
 
@@ -26,11 +27,8 @@ class StatisticalRepository {
         return studentsCollection.document(studentId).get().await().toObject(Student::class.java)?.name
     }
 
-    suspend fun getClassName(studentId: String): String? {
-        val student = studentsCollection.document(studentId).get().await().toObject(Student::class.java)
-        return student?.classes?.mapNotNull { classId ->
-            classesCollection.document(classId).get().await().toObject(Classes::class.java)?.className
-        }?.firstOrNull()
+    suspend fun getClassName(classId: String): String? { // Sửa đổi hàm getClassName()
+        return classesCollection.document(classId).get().await().toObject(Classes::class.java)?.className
     }
 
     suspend fun getTestName(testId: String): String? {
